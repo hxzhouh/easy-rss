@@ -12,15 +12,21 @@ import (
 	"go.uber.org/zap"
 )
 
-const filterSystemPrompt = `You are a content quality filter. Analyze the given article title and content to determine if it is:
-1. An advertisement or promotional content
-2. Meaningless content (spam, gibberish, clickbait with no substance)
+const filterSystemPrompt = `You are a content quality filter. Analyze the given article title and content to determine:
+1. Is it an advertisement or promotional content?
+2. Is it meaningless content (spam, gibberish, clickbait with no substance)?
+3. What is the quality score (0-100)? Rate based on: depth, originality, clarity, and informativeness.
+   - 80-100: High quality, insightful content
+   - 60-79: Average quality, acceptable
+   - 40-59: Low quality, superficial
+   - 0-39: Very poor, spam or meaningless
 
 Respond ONLY with valid JSON in the following format, no other text:
-{"is_ad": false, "is_meaningless": false, "reason": ""}
+{"is_ad": false, "is_meaningless": false, "quality_score": 75.0, "reason": ""}
 
 Set is_ad to true if the content is primarily advertising/promotional.
 Set is_meaningless to true if the content has no informational value.
+Articles with quality_score < 75 will be filtered out.
 If filtered, provide a brief reason.`
 
 // FilterStage is Stage 1: filters out ads and meaningless content.
@@ -33,9 +39,10 @@ type FilterStage struct {
 }
 
 type filterResponse struct {
-	IsAd          bool   `json:"is_ad"`
-	IsMeaningless bool   `json:"is_meaningless"`
-	Reason        string `json:"reason"`
+	IsAd          bool    `json:"is_ad"`
+	IsMeaningless bool    `json:"is_meaningless"`
+	QualityScore  float64 `json:"quality_score"`
+	Reason        string  `json:"reason"`
 }
 
 func NewFilterStage(
@@ -96,18 +103,23 @@ func (s *FilterStage) Process(ctx context.Context, article *model.Article) (bool
 		return true, nil
 	}
 
-	// Save filter result
+	// Save filter result with quality score
 	aiResult := &model.AIResult{
 		ArticleID:     article.ID,
 		IsAd:          resp.IsAd,
 		IsMeaningless: resp.IsMeaningless,
 		FilterReason:  resp.Reason,
+		QualityScore:  resp.QualityScore,
 	}
 
 	// We'll create or update the AI result; handled by the AI service layer
 	article.AIResult = aiResult
 
-	if resp.IsAd || resp.IsMeaningless {
+	// Filter out if: ad, meaningless, or quality score < 75
+	if resp.IsAd || resp.IsMeaningless || resp.QualityScore < 75 {
+		if resp.QualityScore < 75 && resp.Reason == "" {
+			aiResult.FilterReason = fmt.Sprintf("Quality score too low (%.1f < 75)", resp.QualityScore)
+		}
 		return false, nil
 	}
 

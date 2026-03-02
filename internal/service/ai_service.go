@@ -40,19 +40,35 @@ func NewAIService(
 	}
 }
 
-// ProcessFilter picks up pending(0) articles and runs Stage 1 (filter).
+// ProcessFilter runs continuously, processing one pending article at a time.
 // Articles pass → passed(2), articles fail → filtered_out(1).
+// Runs until context is cancelled or no more pending articles.
 func (s *AIService) ProcessFilter(ctx context.Context) {
-	articles, err := s.articleRepo.ListByStatus(model.AIStatusPending, s.maxConc*2)
-	if err != nil {
-		s.logger.Error("failed to list pending articles for filter", zap.Error(err))
-		return
-	}
-	if len(articles) == 0 {
-		return
-	}
+	for {
+		select {
+		case <-ctx.Done():
+			s.logger.Info("ProcessFilter stopped")
+			return
+		default:
+		}
 
-	s.processBatch(ctx, articles, s.filterStage, model.AIStatusPassed, "filter")
+		// Get one pending article
+		articles, err := s.articleRepo.ListByStatus(model.AIStatusPending, 1)
+		if err != nil {
+			s.logger.Error("failed to list pending articles for filter", zap.Error(err))
+			time.Sleep(5 * time.Second)
+			continue
+		}
+		if len(articles) == 0 {
+			// No pending articles, wait and retry
+			time.Sleep(5 * time.Second)
+			continue
+		}
+
+		// Process single article
+		article := articles[0]
+		s.processStage(ctx, &article, s.filterStage, model.AIStatusPassed)
+	}
 }
 
 // ProcessEnrich picks up passed(2) articles and runs Stage 2 (enrich).
