@@ -392,9 +392,9 @@
         {{if .Articles}}
         <div class="article-list">
             {{range .Articles}}
-            <article class="article-card" onclick="window.open('{{.Link}}', '_blank')">
+            <article class="article-card" onclick="window.location.href='/article/{{.ID}}'">
                 <!-- Title -->
-                <a href="{{.Link}}" target="_blank" class="article-title" onclick="event.stopPropagation()">
+                <a href="/article/{{.ID}}" class="article-title" onclick="event.stopPropagation()">
                     {{if .TranslatedTitle}}{{.TranslatedTitle}}{{else}}{{.Title}}{{end}}
                 </a>
                 {{if and .TranslatedTitle (ne .TranslatedTitle .Title)}}

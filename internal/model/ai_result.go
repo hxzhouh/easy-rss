@@ -37,15 +37,16 @@ func (s *StringSlice) Scan(src interface{}) error {
 
 // AIResult stores the AI processing output for an article.
 type AIResult struct {
-	ID              int64       `json:"id" gorm:"primaryKey;autoIncrement"`
-	ArticleID       int64       `json:"article_id" gorm:"uniqueIndex;not null"`
-	IsAd            bool        `json:"is_ad" gorm:"default:false"`
-	IsMeaningless   bool        `json:"is_meaningless" gorm:"default:false"`
-	FilterReason    string      `json:"filter_reason" gorm:"default:''"`
-	QualityScore    float64     `json:"quality_score" gorm:"default:0"`
-	Summary         string      `json:"summary" gorm:"type:text;default:''"`
-	SummaryZh       string      `json:"summary_zh" gorm:"type:text;default:''"`
-	TranslatedTitle string      `json:"translated_title" gorm:"default:''"`
-	Tags            StringSlice `json:"tags" gorm:"type:text"`
-	ProcessedAt     time.Time   `json:"processed_at" gorm:"autoCreateTime"`
+	ID                  int64       `json:"id" gorm:"primaryKey;autoIncrement"`
+	ArticleID           int64       `json:"article_id" gorm:"uniqueIndex;not null"`
+	IsAd                bool        `json:"is_ad" gorm:"default:false"`
+	IsMeaningless       bool        `json:"is_meaningless" gorm:"default:false"`
+	FilterReason        string      `json:"filter_reason" gorm:"default:''"`
+	QualityScore        float64     `json:"quality_score" gorm:"default:0"`
+	Summary             string      `json:"summary" gorm:"type:text;default:''"`
+	SummaryZh           string      `json:"summary_zh" gorm:"type:text;default:''"`
+	TranslatedTitle     string      `json:"translated_title" gorm:"default:''"`
+	TranslatedContent   string      `json:"translated_content" gorm:"type:text;default:''"`
+	Tags                StringSlice `json:"tags" gorm:"type:text"`
+	ProcessedAt         time.Time   `json:"processed_at" gorm:"autoCreateTime"`
 }

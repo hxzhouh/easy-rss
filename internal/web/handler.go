@@ -23,6 +23,7 @@ type WebHandler struct {
 
 func NewWebHandler(articleRepo *repository.ArticleRepo, feedRepo *repository.FeedRepo) *WebHandler {
 	funcMap := template.FuncMap{
+		"safeHTML": func(s string) template.HTML { return template.HTML(s) },
 		"formatDate": func(t time.Time) string {
 			now := time.Now()
 			diff := now.Sub(t)
@@ -112,19 +113,20 @@ type PageData struct {
 }
 
 type ArticleView struct {
-	ID              int64
-	Title           string
-	TranslatedTitle string
-	Link            string
-	Author          string
-	Source          string
-	FeedTitle       string
-	SummaryZh       string
-	Summary         string
-	QualityScore    float64
-	Tags            []string
-	CreatedAt       time.Time
-	AIStatus        int16
+	ID                int64
+	Title             string
+	TranslatedTitle   string
+	Link              string
+	Author            string
+	Source            string
+	FeedTitle         string
+	SummaryZh         string
+	Summary           string
+	TranslatedContent string
+	QualityScore      float64
+	Tags              []string
+	CreatedAt         time.Time
+	AIStatus          int16
 }
 
 func (h *WebHandler) ServeAdmin(c *gin.Context) {
@@ -136,6 +138,7 @@ func (h *WebHandler) ServeAdmin(c *gin.Context) {
 
 func (h *WebHandler) RegisterRoutes(r *gin.Engine) {
 	r.GET("/", h.Index)
+	r.GET("/article/:id", h.ArticleDetail)
 	r.GET("/admin", h.ServeAdmin)
 	r.GET("/admin/*path", h.ServeAdmin)
 }
@@ -183,6 +186,7 @@ func (h *WebHandler) Index(c *gin.Context) {
 			v.TranslatedTitle = a.AIResult.TranslatedTitle
 			v.SummaryZh = a.AIResult.SummaryZh
 			v.Summary = a.AIResult.Summary
+			v.TranslatedContent = a.AIResult.TranslatedContent
 			v.QualityScore = a.AIResult.QualityScore
 			v.Tags = a.AIResult.Tags
 		}
@@ -209,6 +213,47 @@ func (h *WebHandler) Index(c *gin.Context) {
 
 	c.Header("Content-Type", "text/html; charset=utf-8")
 	if err := h.tmpl.ExecuteTemplate(c.Writer, "index.html", data); err != nil {
+		c.String(500, "Template error: "+err.Error())
+	}
+}
+
+func (h *WebHandler) ArticleDetail(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Invalid article ID")
+		return
+	}
+
+	article, err := h.articleRepo.GetByID(id)
+	if err != nil {
+		c.String(http.StatusNotFound, "Article not found")
+		return
+	}
+
+	// Build view model
+	view := ArticleView{
+		ID:        article.ID,
+		Title:     article.Title,
+		Link:      article.Link,
+		Author:    article.Author,
+		Source:    article.Source,
+		CreatedAt: article.CreatedAt,
+		AIStatus:  article.AIStatus,
+	}
+	if article.Feed != nil {
+		view.FeedTitle = article.Feed.Title
+	}
+	if article.AIResult != nil {
+		view.TranslatedTitle = article.AIResult.TranslatedTitle
+		view.SummaryZh = article.AIResult.SummaryZh
+		view.Summary = article.AIResult.Summary
+		view.TranslatedContent = article.AIResult.TranslatedContent
+		view.QualityScore = article.AIResult.QualityScore
+		view.Tags = article.AIResult.Tags
+	}
+
+	c.Header("Content-Type", "text/html; charset=utf-8")
+	if err := h.tmpl.ExecuteTemplate(c.Writer, "article.html", view); err != nil {
 		c.String(500, "Template error: "+err.Error())
 	}
 }
