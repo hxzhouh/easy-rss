@@ -102,10 +102,10 @@ func (h *StageConfigHandler) TestConnection(c *gin.Context) {
 		return
 	}
 
-	// 创建临时客户端测试连接
-	client := aiutil.NewClient(req.BaseURL, req.APIKey, req.Model, 30*time.Second)
+	// 创建临时客户端测试连接（10分钟超时，适配慢速 API）
+	client := aiutil.NewClient(req.BaseURL, req.APIKey, req.Model, 10*time.Minute)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
 
 	if err := client.ValidateAPIKey(ctx); err != nil {
