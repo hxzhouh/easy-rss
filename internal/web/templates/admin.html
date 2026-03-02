@@ -1,0 +1,1847 @@
+{{define "admin.html"}}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy-RSS · 管理后台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-header: #ffffff;
+            --bg-sidebar: #ffffff;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-light: #eff6ff;
+            --tag-bg: #f1f5f9;
+            --tag-text: #475569;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+            --radius: 12px;
+            --sidebar-width: 220px;
+            --font: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        #login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg-page);
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .login-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: var(--font);
+            color: var(--text-primary);
+            background: var(--bg-card);
+            transition: border-color 0.15s;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: var(--font);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.15s;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+            border-color: var(--danger-hover);
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 13px;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* ===== APP LAYOUT ===== */
+        #app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border-color);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+        }
+
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .app-header .logo-text {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .app-header .header-badge {
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .header-spacer {
+            flex: 1;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .layout {
+            display: flex;
+            padding-top: 56px;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            padding: 8px 10px 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: var(--tag-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 24px;
+            min-width: 0;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== CARDS & TABLES ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-page);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.1s;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-page);
+        }
+
+        td {
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-green {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .badge-yellow {
+            background: #fefce8;
+            color: #ca8a04;
+        }
+
+        .badge-orange {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .badge-red {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .badge-blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .badge-gray {
+            background: var(--tag-bg);
+            color: var(--text-muted);
+        }
+
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* ===== FILTERS BAR ===== */
+        .filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .filter-select {
+            padding: 7px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: var(--font);
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--accent);
+        }
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .page-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 7px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: var(--font);
+        }
+
+        .page-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .page-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            margin: 16px;
+        }
+
+        .modal-header {
+            padding: 20px 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+            background: var(--tag-bg);
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+        }
+
+        .modal-footer {
+            padding: 0 24px 20px;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        /* ===== DETAIL PANEL ===== */
+        .detail-panel {
+            display: none;
+            position: fixed;
+            top: 56px;
+            right: 0;
+            bottom: 0;
+            width: 480px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-color);
+            z-index: 300;
+            overflow-y: auto;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .detail-panel.open {
+            display: block;
+        }
+
+        .detail-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .detail-title {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .detail-body {
+            padding: 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .detail-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* ===== LOADING ===== */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 2px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.15s;
+            font-family: var(--font);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ===== FORM GRID ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-grid .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== TOAST ===== */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            animation: slideIn 0.2s ease;
+        }
+
+        .toast-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .toast-error {
+            background: var(--danger);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 0px;
+            }
+
+            .sidebar {
+                transform: translateX(-220px);
+            }
+
+            .detail-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="logo-icon">R</div>
+                <div>
+                    <div class="login-title">Easy-RSS</div>
+                    <div class="login-subtitle">管理后台</div>
+                </div>
+            </div>
+            <div id="login-error" class="alert alert-error" style="display:none"></div>
+            <div class="form-group">
+                <label class="form-label">用户名</label>
+                <input type="text" class="form-input" id="login-username" placeholder="admin" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label class="form-label">密码</label>
+                <input type="password" class="form-input" id="login-password" placeholder="••••••••"
+                    autocomplete="current-password">
+            </div>
+            <button class="btn btn-primary btn-full" id="login-btn" onclick="handleLogin()">登录</button>
+        </div>
+    </div>
+
+    <!-- ===== APP ===== -->
+    <div id="app">
+        <!-- App Header -->
+        <header class="app-header">
+            <a href="/" class="logo">
+                <div class="logo-icon" style="width:28px;height:28px;font-size:14px">R</div>
+                <span class="logo-text">Easy-RSS</span>
+            </a>
+            <span class="header-badge">管理后台</span>
+            <div class="header-spacer"></div>
+            <div class="header-user">
+                <span id="header-username"></span>
+                <button class="btn btn-secondary btn-sm" onclick="handleLogout()">退出</button>
+            </div>
+        </header>
+
+        <div class="layout">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-label">内容管理</div>
+                    <button class="nav-item active" id="nav-feeds" onclick="navigate('feeds')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 11a9 9 0 0 1 9 9" />
+                            <path d="M4 4a16 16 0 0 1 16 16" />
+                            <circle cx="5" cy="19" r="1" />
+                        </svg>
+                        订阅源管理
+                    </button>
+                    <button class="nav-item" id="nav-articles" onclick="navigate('articles')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                        文章管理
+                    </button>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-label">系统设置</div>
+                    <button class="nav-item" id="nav-ai-config" onclick="navigate('ai-config')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3" />
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
+                        </svg>
+                        AI 阶段配置
+                    </button>
+                </div>
+                <div class="sidebar-section" style="margin-top:auto">
+                    <a href="/" class="nav-item" style="color:var(--text-muted)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                        读者首页
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+
+                <!-- ===== FEEDS SECTION ===== -->
+                <div class="section active" id="section-feeds">
+                    <div class="section-header">
+                        <h1 class="section-title">订阅源管理</h1>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="openOPMLModal()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                导入 OPML
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="openAddFeedModal()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                添加订阅源
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" id="tab-feeds-list"
+                            onclick="switchFeedTab('list')">全部订阅源</button>
+                        <button class="tab-btn" id="tab-feeds-quality" onclick="switchFeedTab('quality')">质量排行</button>
+                    </div>
+
+                    <div id="feeds-list-content">
+                        <div class="card">
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>标题</th>
+                                            <th>分类</th>
+                                            <th>质量分</th>
+                                            <th>状态</th>
+                                            <th>文章数</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="feeds-tbody">
+                                        <tr>
+                                            <td colspan="6" class="loading">加载中…</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination" id="feeds-pagination"></div>
+                        </div>
+                    </div>
+
+                    <div id="feeds-quality-content" style="display:none">
+                        <div class="card">
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>排名</th>
+                                            <th>标题</th>
+                                            <th>综合质量分</th>
+                                            <th>通过率</th>
+                                            <th>平均质量分</th>
+                                            <th>更新频率</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="quality-tbody">
+                                        <tr>
+                                            <td colspan="6" class="loading">加载中…</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ARTICLES SECTION ===== -->
+                <div class="section" id="section-articles">
+                    <div class="section-header">
+                        <h1 class="section-title">文章管理</h1>
+                    </div>
+                    <div class="filters">
+                        <select class="filter-select" id="filter-ai-status" onchange="loadArticles(1)">
+                            <option value="">全部状态</option>
+                            <option value="0">待处理 (pending)</option>
+                            <option value="1">已过滤 (filtered_out)</option>
+                            <option value="2">通过过滤 (passed)</option>
+                            <option value="3">已精加工 (enriched)</option>
+                        </select>
+                        <select class="filter-select" id="filter-feed-id" onchange="loadArticles(1)">
+                            <option value="">全部来源</option>
+                        </select>
+                    </div>
+                    <div class="card">
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>标题</th>
+                                        <th>来源</th>
+                                        <th>AI 状态</th>
+                                        <th>质量分</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="articles-tbody">
+                                    <tr>
+                                        <td colspan="6" class="loading">加载中…</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination" id="articles-pagination"></div>
+                    </div>
+                </div>
+
+                <!-- ===== AI CONFIG SECTION ===== -->
+                <div class="section" id="section-ai-config">
+                    <div class="section-header">
+                        <h1 class="section-title">AI 阶段配置</h1>
+                        <div class="section-actions">
+                            <button class="btn btn-primary btn-sm" onclick="openStageConfigModal()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                添加/更新配置
+                            </button>
+                        </div>
+                    </div>
+                    <div id="stage-configs-list">
+                        <div class="loading">加载中…</div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ===== ARTICLE DETAIL PANEL ===== -->
+    <div class="detail-panel" id="article-detail-panel">
+        <div class="detail-header">
+            <button class="btn btn-secondary btn-sm" onclick="closeDetailPanel()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                关闭
+            </button>
+            <div class="detail-title" id="detail-panel-title">文章详情</div>
+        </div>
+        <div class="detail-body" id="detail-panel-body"></div>
+    </div>
+
+    <!-- ===== MODALS ===== -->
+
+    <!-- Add Feed Modal -->
+    <div class="modal-backdrop" id="add-feed-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="feed-modal-title">添加订阅源</div>
+                <button class="modal-close" onclick="closeModal('add-feed-modal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="feed-edit-id">
+                <div class="form-group">
+                    <label class="form-label">RSS URL *</label>
+                    <input type="url" class="form-input" id="feed-url" placeholder="https://example.com/feed.xml">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">标题（可选，留空自动获取）</label>
+                    <input type="text" class="form-input" id="feed-title" placeholder="订阅源名称">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">分类</label>
+                    <input type="text" class="form-input" id="feed-category" placeholder="技术、新闻…">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">状态</label>
+                    <select class="form-input" id="feed-status">
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('add-feed-modal')">取消</button>
+                <button class="btn btn-primary" onclick="saveFeed()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPML Import Modal -->
+    <div class="modal-backdrop" id="opml-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">导入 OPML</div>
+                <button class="modal-close" onclick="closeModal('opml-modal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">选择 OPML 文件</label>
+                    <input type="file" class="form-input" id="opml-file" accept=".opml,.xml">
+                </div>
+                <div id="opml-result" style="display:none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('opml-modal')">取消</button>
+                <button class="btn btn-primary" onclick="importOPML()">导入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Default Prompt Modal -->
+    <div class="modal-backdrop" id="default-prompt-modal" style="z-index: 600;">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">系统默认 Prompt</div>
+                <button class="modal-close" onclick="closeModal('default-prompt-modal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" id="default-prompt-stage-label"></label>
+                    <textarea class="form-input" id="default-prompt-content" rows="12" readonly></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal('default-prompt-modal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stage Config Modal -->
+    <div class="modal-backdrop" id="stage-config-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Stage AI 配置</div>
+                <button class="modal-close" onclick="closeModal('stage-config-modal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Stage 名称 *</label>
+                    <select class="form-input" id="config-stage-name">
+                        <option value="filter">filter（过滤阶段）</option>
+                        <option value="enrich">enrich（精加工阶段）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Provider（可选）</label>
+                    <input type="text" class="form-input" id="config-provider" placeholder="openai">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Base URL</label>
+                    <input type="url" class="form-input" id="config-base-url" placeholder="https://api.openai.com/v1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">API Key</label>
+                    <input type="password" class="form-input" id="config-api-key" placeholder="sk-…">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Model</label>
+                    <input type="text" class="form-input" id="config-model" placeholder="gpt-4o-mini">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        自定义 Prompt
+                        <span class="badge badge-gray" style="cursor:pointer;margin-left:8px"
+                            onclick="showDefaultPrompt()" title="点击查看默认 Prompt">? 默认提示词</span>
+                    </label>
+                    <textarea class="form-input" id="config-prompt" rows="5" placeholder="留空则使用系统默认 Prompt"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">状态</label>
+                    <select class="form-input" id="config-enabled">
+                        <option value="true">启用</option>
+                        <option value="false">禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('stage-config-modal')">取消</button>
+                <button class="btn btn-primary" onclick="saveStageConfig()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== STATE =====
+        let token = localStorage.getItem('token') || '';
+        let currentSection = 'feeds';
+        let feedsPage = 1;
+        let articlesPage = 1;
+        let feedsTotal = 0;
+        let articlesTotal = 0;
+        const PAGE_SIZE = 20;
+
+        const DEFAULT_PROMPTS = {
+            'filter': `You are a content quality filter. Analyze the given article title and content to determine if it is:\n1. An advertisement or promotional content\n2. Meaningless content (spam, gibberish, clickbait with no substance)\n\nRespond ONLY with valid JSON in the following format, no other text:\n{"is_ad": false, "is_meaningless": false, "reason": ""}\n\nSet is_ad to true if the content is primarily advertising/promotional.\nSet is_meaningless to true if the content has no informational value.\nIf filtered, provide a brief reason.`,
+            'enrich': `You are a content analyst. Analyze the given article and provide:\n1. A quality score from 0 to 100 (based on depth, originality, clarity, and informativeness)\n2. A concise summary in English (2-3 sentences)\n3. A concise summary translated to Chinese (2-3 sentences)\n4. The article title translated to Chinese\n5. Up to 5 relevant tags/keywords\n\nRespond ONLY with valid JSON in the following format, no other text:\n{\n  "quality_score": 85.0,\n  "summary": "English summary here.",\n  "summary_zh": "中文摘要。",\n  "translated_title": "中文标题",\n  "tags": ["tag1", "tag2"]\n}`
+        };
+
+        // ===== TOAST =====
+        function toast(msg, type = 'success') {
+            const el = document.createElement('div');
+            el.className = `toast toast-${type}`;
+            el.textContent = msg;
+            document.getElementById('toast-container').appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
+
+        // ===== AUTH =====
+        function isAuthenticated() { return !!token; }
+
+        async function handleLogin() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const errEl = document.getElementById('login-error');
+            errEl.style.display = 'none';
+            if (!username || !password) { errEl.textContent = '请填写用户名和密码'; errEl.style.display = 'block'; return; }
+            document.getElementById('login-btn').disabled = true;
+            try {
+                const res = await fetch('/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || '登录失败');
+                token = data.token;
+                localStorage.setItem('token', token);
+                localStorage.setItem('username', username);
+                showApp();
+            } catch (e) {
+                errEl.textContent = e.message;
+                errEl.style.display = 'block';
+            } finally {
+                document.getElementById('login-btn').disabled = false;
+            }
+        }
+
+        function handleLogout() {
+            token = '';
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+        }
+
+        function showApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('header-username').textContent = localStorage.getItem('username') || 'admin';
+            const hash = location.hash.replace('#', '') || 'feeds';
+            navigate(hash);
+        }
+
+        // ===== API =====
+        async function api(method, path, body = null) {
+            const opts = {
+                method,
+                headers: { 'Authorization': `Bearer ${token}` }
+            };
+            if (body && !(body instanceof FormData)) {
+                opts.headers['Content-Type'] = 'application/json';
+                opts.body = JSON.stringify(body);
+            } else if (body instanceof FormData) {
+                opts.body = body;
+            }
+            const res = await fetch('/api/v1' + path, opts);
+            if (res.status === 401) { handleLogout(); throw new Error('未授权，请重新登录'); }
+            const text = await res.text();
+            let data;
+            try { data = JSON.parse(text); } catch { data = text; }
+            if (!res.ok) throw new Error((data && data.error) || '请求失败');
+            return data;
+        }
+
+        // ===== ROUTING =====
+        function navigate(section) {
+            currentSection = section;
+            location.hash = section;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            const navEl = document.getElementById('nav-' + section);
+            if (navEl) navEl.classList.add('active');
+            const sectionEl = document.getElementById('section-' + section);
+            if (sectionEl) sectionEl.classList.add('active');
+            closeDetailPanel();
+            if (section === 'feeds') loadFeeds(1);
+            if (section === 'articles') { loadFeedFilter(); loadArticles(1); }
+            if (section === 'ai-config') loadStageConfigs();
+        }
+
+        // ===== MODAL HELPERS =====
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+        // ===== DETAIL PANEL =====
+        function closeDetailPanel() {
+            document.getElementById('article-detail-panel').classList.remove('open');
+        }
+
+        // ===== UTILITY =====
+        function scoreColor(s) {
+            if (s >= 80) return '#16a34a';
+            if (s >= 60) return '#ca8a04';
+            if (s >= 40) return '#ea580c';
+            return '#dc2626';
+        }
+        function scoreBg(s) {
+            if (s >= 80) return '#f0fdf4';
+            if (s >= 60) return '#fefce8';
+            if (s >= 40) return '#fff7ed';
+            return '#fef2f2';
+        }
+        function aiStatusBadge(status) {
+            const map = {
+                0: ['badge-gray', '待处理'],
+                1: ['badge-red', '已过滤'],
+                2: ['badge-yellow', '通过过滤'],
+                3: ['badge-green', '已精加工']
+            };
+            const [cls, label] = map[status] || ['badge-gray', '未知'];
+            return `<span class="badge ${cls}">${label}</span>`;
+        }
+        function feedStatusBadge(active) {
+            return active
+                ? '<span class="badge badge-green">启用</span>'
+                : '<span class="badge badge-gray">禁用</span>';
+        }
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            const now = new Date();
+            const diff = now - d;
+            if (diff < 60000) return '刚刚';
+            if (diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + ' 小时前';
+            if (diff < 172800000) return '昨天';
+            return d.toLocaleDateString('zh-CN');
+        }
+        function renderPagination(containerId, currentPage, total, onPage) {
+            const totalPages = Math.ceil(total / PAGE_SIZE);
+            const el = document.getElementById(containerId);
+            if (totalPages <= 1) { el.innerHTML = ''; return; }
+            let html = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="${onPage}(${currentPage - 1})">上一页</button>`;
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="${onPage}(${i})">${i}</button>`;
+            }
+            html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="${onPage}(${currentPage + 1})">下一页</button>`;
+            el.innerHTML = html;
+        }
+
+        // ===== FEEDS =====
+        let feedsCurrentTab = 'list';
+
+        function switchFeedTab(tab) {
+            feedsCurrentTab = tab;
+            document.getElementById('tab-feeds-list').classList.toggle('active', tab === 'list');
+            document.getElementById('tab-feeds-quality').classList.toggle('active', tab === 'quality');
+            document.getElementById('feeds-list-content').style.display = tab === 'list' ? '' : 'none';
+            document.getElementById('feeds-quality-content').style.display = tab === 'quality' ? '' : 'none';
+            if (tab === 'quality') loadFeedQuality();
+            else loadFeeds(feedsPage);
+        }
+
+        async function loadFeeds(page) {
+            feedsPage = page;
+            document.getElementById('feeds-tbody').innerHTML = '<tr><td colspan="6" class="loading">加载中…</td></tr>';
+            try {
+                const data = await api('GET', `/feeds?page=${page}&page_size=${PAGE_SIZE}`);
+                const feeds = data.feeds || data.data || data || [];
+                const total = data.total || feeds.length;
+                feedsTotal = total;
+                if (!feeds.length) {
+                    document.getElementById('feeds-tbody').innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>暂无订阅源，点击「添加订阅源」开始</p></div></td></tr>';
+                    document.getElementById('feeds-pagination').innerHTML = '';
+                    return;
+                }
+                document.getElementById('feeds-tbody').innerHTML = feeds.map(f => `
+            <tr>
+                <td>
+                    <div style="font-weight:500;margin-bottom:2px">${escHtml(f.title || '(未命名)')}</div>
+                    <div style="font-size:12px;color:var(--text-muted)">${escHtml(f.url || '')}</div>
+                </td>
+                <td>${escHtml(f.category || '—')}</td>
+                <td>${f.quality_score != null ? `<span class="score-badge" style="background:${scoreBg(f.quality_score)};color:${scoreColor(f.quality_score)}">${Math.round(f.quality_score)}</span>` : '—'}</td>
+                <td>${feedStatusBadge(f.active)}</td>
+                <td style="color:var(--text-muted)">${f.article_count ?? '—'}</td>
+                <td>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                        <button class="btn btn-secondary btn-sm" onclick="fetchFeedNow(${f.id})">立即抓取</button>
+                        <button class="btn btn-secondary btn-sm" onclick="openEditFeedModal(${f.id})">编辑</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteFeed(${f.id}, '${escHtml(f.title || '')}')">删除</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+                renderPagination('feeds-pagination', page, total, 'loadFeeds');
+            } catch (e) {
+                document.getElementById('feeds-tbody').innerHTML = `<tr><td colspan="6" style="color:var(--danger);padding:16px">${e.message}</td></tr>`;
+            }
+        }
+
+        async function loadFeedQuality() {
+            document.getElementById('quality-tbody').innerHTML = '<tr><td colspan="6" class="loading">加载中…</td></tr>';
+            try {
+                const data = await api('GET', '/feeds/quality');
+                const list = data.feeds || data.data || data || [];
+                if (!list.length) {
+                    document.getElementById('quality-tbody').innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>暂无质量评估数据</p></div></td></tr>';
+                    return;
+                }
+                document.getElementById('quality-tbody').innerHTML = list.map((f, i) => `
+            <tr>
+                <td style="font-weight:600;color:var(--text-muted)">#${i + 1}</td>
+                <td>
+                    <div style="font-weight:500">${escHtml(f.title || '(未命名)')}</div>
+                    <div style="font-size:12px;color:var(--text-muted)">${escHtml(f.url || '')}</div>
+                </td>
+                <td><span class="score-badge" style="background:${scoreBg(f.quality_score)};color:${scoreColor(f.quality_score)}">${Math.round(f.quality_score)}</span></td>
+                <td>${f.pass_rate != null ? Math.round(f.pass_rate * 100) + '%' : '—'}</td>
+                <td>${f.avg_quality_score != null ? Math.round(f.avg_quality_score) : '—'}</td>
+                <td>${f.update_frequency != null ? f.update_frequency.toFixed(1) + '/天' : '—'}</td>
+            </tr>
+        `).join('');
+            } catch (e) {
+                document.getElementById('quality-tbody').innerHTML = `<tr><td colspan="6" style="color:var(--danger);padding:16px">${e.message}</td></tr>`;
+            }
+        }
+
+        function openAddFeedModal() {
+            document.getElementById('feed-modal-title').textContent = '添加订阅源';
+            document.getElementById('feed-edit-id').value = '';
+            document.getElementById('feed-url').value = '';
+            document.getElementById('feed-title').value = '';
+            document.getElementById('feed-category').value = '';
+            document.getElementById('feed-status').value = '1';
+            openModal('add-feed-modal');
+        }
+
+        async function openEditFeedModal(id) {
+            try {
+                const f = await api('GET', `/feeds/${id}`);
+                const feed = f.feed || f;
+                document.getElementById('feed-modal-title').textContent = '编辑订阅源';
+                document.getElementById('feed-edit-id').value = id;
+                document.getElementById('feed-url').value = feed.url || '';
+                document.getElementById('feed-title').value = feed.title || '';
+                document.getElementById('feed-category').value = feed.category || '';
+                document.getElementById('feed-status').value = feed.active ? '1' : '0';
+                openModal('add-feed-modal');
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function saveFeed() {
+            const id = document.getElementById('feed-edit-id').value;
+            const url = document.getElementById('feed-url').value.trim();
+            const title = document.getElementById('feed-title').value.trim();
+            const category = document.getElementById('feed-category').value.trim();
+            const active = document.getElementById('feed-status').value === '1';
+            if (!url) { toast('请填写 RSS URL', 'error'); return; }
+            try {
+                if (id) {
+                    await api('PUT', `/feeds/${id}`, { url, title, category, active });
+                    toast('订阅源已更新');
+                } else {
+                    await api('POST', '/feeds', { url, title, category });
+                    toast('订阅源已添加');
+                }
+                closeModal('add-feed-modal');
+                loadFeeds(feedsPage);
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function fetchFeedNow(id) {
+            try {
+                await api('POST', `/feeds/${id}/fetch`);
+                toast('抓取任务已触发');
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function deleteFeed(id, title) {
+            if (!confirm(`确认删除订阅源「${title}」？此操作不可撤销。`)) return;
+            try {
+                await api('DELETE', `/feeds/${id}`);
+                toast('已删除');
+                loadFeeds(feedsPage);
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        function openOPMLModal() {
+            document.getElementById('opml-file').value = '';
+            document.getElementById('opml-result').style.display = 'none';
+            openModal('opml-modal');
+        }
+
+        async function importOPML() {
+            const file = document.getElementById('opml-file').files[0];
+            if (!file) { toast('请选择 OPML 文件', 'error'); return; }
+            const fd = new FormData();
+            fd.append('file', file);
+            try {
+                const res = await fetch('/api/v1/feeds/import/opml', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: fd
+                });
+                if (res.status === 401) { handleLogout(); return; }
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || '导入失败');
+                const resultEl = document.getElementById('opml-result');
+                resultEl.className = 'alert alert-success';
+                resultEl.textContent = `成功导入 ${data.imported || data.count || '?'} 个订阅源`;
+                resultEl.style.display = 'block';
+                loadFeeds(1);
+            } catch (e) {
+                const resultEl = document.getElementById('opml-result');
+                resultEl.className = 'alert alert-error';
+                resultEl.textContent = e.message;
+                resultEl.style.display = 'block';
+            }
+        }
+
+        // ===== ARTICLES =====
+        async function loadFeedFilter() {
+            try {
+                const data = await api('GET', '/feeds?page=1&page_size=200');
+                const feeds = data.feeds || data.data || data || [];
+                const sel = document.getElementById('filter-feed-id');
+                const current = sel.value;
+                sel.innerHTML = '<option value="">全部来源</option>' + feeds.map(f =>
+                    `<option value="${f.id}" ${String(f.id) === current ? 'selected' : ''}>${escHtml(f.title || f.url)}</option>`
+                ).join('');
+            } catch { }
+        }
+
+        async function loadArticles(page) {
+            articlesPage = page;
+            const aiStatus = document.getElementById('filter-ai-status').value;
+            const feedId = document.getElementById('filter-feed-id').value;
+            let qs = `?page=${page}&page_size=${PAGE_SIZE}`;
+            if (aiStatus !== '') qs += `&ai_status=${aiStatus}`;
+            if (feedId) qs += `&feed_id=${feedId}`;
+            document.getElementById('articles-tbody').innerHTML = '<tr><td colspan="6" class="loading">加载中…</td></tr>';
+            try {
+                const data = await api('GET', `/articles${qs}`);
+                const articles = data.articles || data.data || data || [];
+                const total = data.total || articles.length;
+                articlesTotal = total;
+                if (!articles.length) {
+                    document.getElementById('articles-tbody').innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>暂无文章</p></div></td></tr>';
+                    document.getElementById('articles-pagination').innerHTML = '';
+                    return;
+                }
+                document.getElementById('articles-tbody').innerHTML = articles.map(a => `
+            <tr>
+                <td style="max-width:300px">
+                    <div style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px">
+                        ${escHtml((a.ai_result && a.ai_result.translated_title) || a.title || '(无标题)')}
+                    </div>
+                    ${a.title && a.ai_result && a.ai_result.translated_title && a.ai_result.translated_title !== a.title
+                        ? `<div style="font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(a.title)}</div>`
+                        : ''}
+                </td>
+                <td style="white-space:nowrap;color:var(--text-muted);font-size:13px">${escHtml(a.feed && a.feed.title || a.source || '—')}</td>
+                <td>${aiStatusBadge(a.ai_status)}</td>
+                <td>${a.ai_result && a.ai_result.quality_score > 0
+                        ? `<span class="score-badge" style="background:${scoreBg(a.ai_result.quality_score)};color:${scoreColor(a.ai_result.quality_score)}">${Math.round(a.ai_result.quality_score)}</span>`
+                        : '—'}</td>
+                <td style="white-space:nowrap;color:var(--text-muted);font-size:13px">${formatDate(a.created_at)}</td>
+                <td>
+                    <div style="display:flex;gap:6px">
+                        <button class="btn btn-secondary btn-sm" onclick="showArticleDetail(${a.id})">详情</button>
+                        <button class="btn btn-secondary btn-sm" onclick="reprocessArticle(${a.id})">重处理</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteArticle(${a.id})">删除</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+                renderPagination('articles-pagination', page, total, 'loadArticles');
+            } catch (e) {
+                document.getElementById('articles-tbody').innerHTML = `<tr><td colspan="6" style="color:var(--danger);padding:16px">${e.message}</td></tr>`;
+            }
+        }
+
+        async function showArticleDetail(id) {
+            const panel = document.getElementById('article-detail-panel');
+            document.getElementById('detail-panel-title').textContent = '加载中…';
+            document.getElementById('detail-panel-body').innerHTML = '<div class="loading">加载中…</div>';
+            panel.classList.add('open');
+            try {
+                const data = await api('GET', `/articles/${id}`);
+                const a = data.article || data;
+                document.getElementById('detail-panel-title').textContent = (a.ai_result && a.ai_result.translated_title) || a.title || '文章详情';
+                let html = '';
+                html += `<div class="detail-section">
+            <div class="detail-section-title">基本信息</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+                ${aiStatusBadge(a.ai_status)}
+                ${a.ai_result && a.ai_result.quality_score > 0 ? `<span class="score-badge" style="background:${scoreBg(a.ai_result.quality_score)};color:${scoreColor(a.ai_result.quality_score)}">${Math.round(a.ai_result.quality_score)}</span>` : ''}
+            </div>
+            <div class="detail-text" style="margin-bottom:6px"><strong>来源：</strong>${escHtml(a.feed && a.feed.title || a.source || '—')}</div>
+            <div class="detail-text" style="margin-bottom:6px"><strong>作者：</strong>${escHtml(a.author || '—')}</div>
+            <div class="detail-text" style="margin-bottom:6px"><strong>时间：</strong>${formatDate(a.created_at)}</div>
+            <div class="detail-text"><a href="${escHtml(a.link || '')}" target="_blank" style="color:var(--accent)">查看原文 →</a></div>
+        </div>`;
+                if (a.ai_result) {
+                    const r = a.ai_result;
+                    if (r.filter_reason) {
+                        html += `<div class="detail-section">
+                    <div class="detail-section-title">过滤原因</div>
+                    <div class="detail-text">${escHtml(r.filter_reason)}</div>
+                </div>`;
+                    }
+                    if (r.summary_zh) {
+                        html += `<div class="detail-section">
+                    <div class="detail-section-title">中文摘要</div>
+                    <div class="detail-text">${escHtml(r.summary_zh)}</div>
+                </div>`;
+                    }
+                    if (r.summary) {
+                        html += `<div class="detail-section">
+                    <div class="detail-section-title">英文摘要</div>
+                    <div class="detail-text">${escHtml(r.summary)}</div>
+                </div>`;
+                    }
+                    if (r.tags && r.tags.length) {
+                        html += `<div class="detail-section">
+                    <div class="detail-section-title">标签</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px">
+                        ${r.tags.map(t => `<span class="badge badge-blue">${escHtml(t)}</span>`).join('')}
+                    </div>
+                </div>`;
+                    }
+                }
+                html += `<div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-secondary btn-sm" onclick="reprocessArticle(${id})">重新处理</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteArticle(${id});closeDetailPanel()">删除</button>
+        </div>`;
+                document.getElementById('detail-panel-body').innerHTML = html;
+            } catch (e) {
+                document.getElementById('detail-panel-body').innerHTML = `<div class="alert alert-error">${e.message}</div>`;
+            }
+        }
+
+        async function reprocessArticle(id) {
+            try {
+                await api('POST', `/articles/${id}/reprocess`);
+                toast('已重新触发 AI 处理');
+                loadArticles(articlesPage);
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function deleteArticle(id) {
+            if (!confirm('确认删除此文章？')) return;
+            try {
+                await api('DELETE', `/articles/${id}`);
+                toast('已删除');
+                loadArticles(articlesPage);
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        // ===== AI CONFIG =====
+        async function loadStageConfigs() {
+            document.getElementById('stage-configs-list').innerHTML = '<div class="loading">加载中…</div>';
+            try {
+                const data = await api('GET', '/stage-configs');
+                const configs = data.configs || data.data || data || [];
+                if (!configs.length) {
+                    document.getElementById('stage-configs-list').innerHTML = '<div class="empty-state"><p>暂无 Stage 配置</p></div>';
+                    return;
+                }
+                document.getElementById('stage-configs-list').innerHTML = configs.map(c => `
+            <div class="card" style="margin-bottom:16px">
+                <div class="card-body">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <h3 style="font-size:16px;font-weight:700">${escHtml(c.stage_name)}</h3>
+                            <span class="badge ${c.enabled ? 'badge-green' : 'badge-gray'}">${c.enabled ? '启用' : '禁用'}</span>
+                        </div>
+                        <div style="display:flex;gap:8px">
+                            <button class="btn btn-secondary btn-sm" onclick="openEditStageConfig('${escHtml(c.stage_name)}')">编辑</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteStageConfig('${escHtml(c.stage_name)}')">删除</button>
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:3px">Provider</div>
+                            <div style="font-size:14px">${escHtml(c.provider || '—')}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:3px">Model</div>
+                            <div style="font-size:14px">${escHtml(c.model || '—')}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:3px">Base URL</div>
+                            <div style="font-size:13px;color:var(--text-secondary);word-break:break-all">${escHtml(c.base_url || '—')}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:3px">API Key</div>
+                            <div style="font-size:13px;color:var(--text-muted)">${c.api_key ? '••••••••' : '—'}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:3px">自定义 Prompt</div>
+                            <div style="font-size:13px;color:var(--text-muted)">
+                                ${c.prompt ? '<span class="badge badge-blue">已配置</span>' : '<span class="badge badge-gray">默认</span>'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+            } catch (e) {
+                document.getElementById('stage-configs-list').innerHTML = `<div class="alert alert-error">${e.message}</div>`;
+            }
+        }
+
+        function openStageConfigModal() {
+            document.getElementById('config-stage-name').value = 'filter';
+            document.getElementById('config-provider').value = '';
+            document.getElementById('config-base-url').value = '';
+            document.getElementById('config-api-key').value = '';
+            document.getElementById('config-model').value = '';
+            document.getElementById('config-prompt').value = '';
+            document.getElementById('config-enabled').value = 'true';
+            openModal('stage-config-modal');
+        }
+
+        function showDefaultPrompt() {
+            const stage = document.getElementById('config-stage-name').value;
+            const promptContent = DEFAULT_PROMPTS[stage] || "无默认 Prompt";
+
+            document.getElementById('default-prompt-stage-label').textContent = `${stage} 阶段的默认 Prompt：`;
+            document.getElementById('default-prompt-content').value = promptContent;
+
+            openModal('default-prompt-modal');
+        }
+
+        async function openEditStageConfig(stageName) {
+            try {
+                const data = await api('GET', '/stage-configs');
+                const configs = data.configs || data.data || data || [];
+                const c = configs.find(x => x.stage_name === stageName);
+                if (!c) { toast('未找到配置', 'error'); return; }
+                document.getElementById('config-stage-name').value = c.stage_name;
+                document.getElementById('config-provider').value = c.provider || '';
+                document.getElementById('config-base-url').value = c.base_url || '';
+                document.getElementById('config-api-key').value = '';
+                document.getElementById('config-model').value = c.model || '';
+                document.getElementById('config-prompt').value = c.prompt || '';
+                document.getElementById('config-enabled').value = c.enabled ? 'true' : 'false';
+                openModal('stage-config-modal');
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function saveStageConfig() {
+            const body = {
+                stage_name: document.getElementById('config-stage-name').value,
+                provider: document.getElementById('config-provider').value.trim(),
+                base_url: document.getElementById('config-base-url').value.trim(),
+                model: document.getElementById('config-model').value.trim(),
+                prompt: document.getElementById('config-prompt').value.trim(),
+                enabled: document.getElementById('config-enabled').value === 'true'
+            };
+            const apiKey = document.getElementById('config-api-key').value.trim();
+            if (apiKey) body.api_key = apiKey;
+            try {
+                await api('POST', '/stage-configs', body);
+                toast('配置已保存');
+                closeModal('stage-config-modal');
+                loadStageConfigs();
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function deleteStageConfig(stageName) {
+            if (!confirm(`确认删除 ${stageName} 的配置？`)) return;
+            try {
+                await api('DELETE', `/stage-configs/${stageName}`);
+                toast('已删除');
+                loadStageConfigs();
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        // ===== XSS PROTECTION =====
+        function escHtml(s) {
+            if (!s) return '';
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ===== KEYBOARD =====
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+                handleLogin();
+            }
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open'));
+                closeDetailPanel();
+            }
+        });
+
+        // ===== INIT =====
+        window.addEventListener('hashchange', () => {
+            if (isAuthenticated()) navigate(location.hash.replace('#', '') || 'feeds');
+        });
+
+        if (isAuthenticated()) {
+            showApp();
+        } else {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('app').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
+{{end}}

@@ -1,0 +1,6 @@
+easyrss.db*
+server
+server.log
+.claude/
+*.opml
+.DS_Store
