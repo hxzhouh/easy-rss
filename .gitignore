@@ -1,5 +1,5 @@
 easyrss.db*
-server
+/server
 server.log
 .claude/
 *.opml
