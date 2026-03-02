@@ -1,0 +1,46 @@
+server:
+  port: 8080
+  mode: debug  # debug / release
+
+database:
+  driver: sqlite           # sqlite / postgres
+  path: easyrss.db         # SQLite 文件路径 (仅 sqlite 模式)
+  # PostgreSQL 配置 (仅 postgres 模式)
+  # host: 127.0.0.1
+  # port: 5432
+  # user: postgres
+  # password: postgres
+  # dbname: easyrss
+  # sslmode: disable
+
+auth:
+  admin_username: admin
+  admin_password: admin123
+  jwt_secret: change-me-in-production
+  jwt_expire_hours: 72
+
+fetcher:
+  interval: 30m
+  timeout: 30s
+  user_agent: "EasyRSS/1.0"
+  max_concurrent: 10
+
+ai:
+  enabled: true
+  provider: deepseek
+  api_key: "your-api-key-here"  # 请替换为你的 API key
+  base_url: "https://api.deepseek.com/v1"
+  model: "deepseek-chat"
+  timeout: 60s
+  filter_interval: 5m
+  filter_concurrent: 5
+  enrich_interval: 10m
+  enrich_concurrent: 3
+
+quality:
+  evaluation_interval: 24h
+  auto_disable_threshold: 20
+  min_articles_for_eval: 10
+
+init:
+  opml_file: ""
