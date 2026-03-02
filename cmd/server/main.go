@@ -176,6 +176,7 @@ func main() {
 			auth.GET("/stage-configs", stageConfigHandler.List)
 			auth.POST("/stage-configs", stageConfigHandler.Upsert)
 			auth.DELETE("/stage-configs/:stage_name", stageConfigHandler.Delete)
+			auth.POST("/stage-configs/test-connection", stageConfigHandler.TestConnection)
 		}
 	}
 

@@ -102,6 +102,9 @@ func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 	}
 	_ = s.feedRepo.Update(feed)
 
+	// 2026年之前的文章不处理（跳过过旧的文章）
+	cutoffDate := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
+
 	newCount := 0
 	for _, item := range parsed.Items {
 		guid := item.GUID
@@ -112,6 +115,11 @@ func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 		var publishedAt *time.Time
 		if item.PublishedParsed != nil {
 			publishedAt = item.PublishedParsed
+		}
+
+		// 跳过 2026 年之前发布的文章
+		if publishedAt != nil && publishedAt.Before(cutoffDate) {
+			continue
 		}
 
 		author := ""
