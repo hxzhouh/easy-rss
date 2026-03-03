@@ -2,9 +2,14 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
 	"sync"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/hxzhouh/easy-rss/internal/model"
 	"github.com/hxzhouh/easy-rss/internal/repository"
 	"github.com/mmcdole/gofeed"
@@ -18,6 +23,7 @@ type FetcherService struct {
 	userAgent   string
 	timeout     time.Duration
 	maxConc     int
+	httpClient  *http.Client
 }
 
 func NewFetcherService(
@@ -35,6 +41,7 @@ func NewFetcherService(
 		userAgent:   userAgent,
 		timeout:     timeout,
 		maxConc:     maxConc,
+		httpClient:  &http.Client{Timeout: 30 * time.Second},
 	}
 }
 
@@ -132,6 +139,17 @@ func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 			content = item.Description
 		}
 
+		// 如果内容太短，尝试抓取全文
+		if len(content) < 1000 && item.Link != "" {
+			fullContent, err := s.fetchArticleContent(ctx, item.Link)
+			if err == nil && len(fullContent) > len(content) {
+				content = fullContent
+				s.logger.Debug("fetched full content",
+					zap.String("title", item.Title),
+					zap.Int("length", len(content)))
+			}
+		}
+
 		article := &model.Article{
 			FeedID:      &feed.ID,
 			GUID:        guid,
@@ -156,4 +174,73 @@ func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 		zap.String("title", feed.Title),
 		zap.Int("items", len(parsed.Items)),
 		zap.Int("new", newCount))
+}
+
+// fetchArticleContent fetches the full article content from the original URL.
+func (s *FetcherService) fetchArticleContent(ctx context.Context, url string) (string, error) {
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("User-Agent", s.userAgent)
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("HTTP %d", resp.StatusCode)
+	}
+
+	// Read body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	// Parse HTML
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(string(body)))
+	if err != nil {
+		return "", err
+	}
+
+	// Try to find main content using common selectors
+	selectors := []string{
+		"article",
+		"[role='main']",
+		".post-content",
+		".entry-content",
+		".article-content",
+		".content",
+		"main",
+		"#main-content",
+		".post",
+		".entry",
+	}
+
+	var content string
+	for _, sel := range selectors {
+		elem := doc.Find(sel).First()
+		if elem.Length() > 0 {
+			content = elem.Text()
+			if len(content) > 500 {
+				break
+			}
+		}
+	}
+
+	// Fallback to body if no content found
+	if len(content) < 100 {
+		content = doc.Find("body").Text()
+	}
+
+	// Clean up whitespace
+	content = strings.Join(strings.Fields(content), " ")
+
+	return content, nil
 }
