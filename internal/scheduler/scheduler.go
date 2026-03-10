@@ -38,10 +38,10 @@ func New(
 
 // CronIntervals holds the cron expressions for each scheduled task.
 type CronIntervals struct {
-	Fetch   string
-	Filter  string
-	Enrich  string
-	Quality string
+	Fetch           string
+	FetchHackerNews string
+	Enrich          string
+	Quality         string
 }
 
 func (s *Scheduler) Start(intervals CronIntervals) {
@@ -54,9 +54,16 @@ func (s *Scheduler) Start(intervals CronIntervals) {
 		s.logger.Fatal("failed to schedule RSS fetch", zap.Error(err))
 	}
 
-	// AI Filter - runs continuously in background (not cron)
-	s.logger.Info("starting AI filter worker (continuous mode, one article at a time)")
-	go s.aiSvc.ProcessFilter(s.ctx)
+	// HackerNews Fetch (cron scheduled)
+	if intervals.FetchHackerNews != "" {
+		_, err = s.cron.AddFunc(intervals.FetchHackerNews, func() {
+			s.logger.Info("starting scheduled HackerNews fetch")
+			s.fetcherSvc.FetchByURL(context.Background(), "https://tg.i-c-a.su/rss/hacker_news_zh")
+		})
+		if err != nil {
+			s.logger.Fatal("failed to schedule HackerNews fetch", zap.Error(err))
+		}
+	}
 
 	// AI Enrich (cron scheduled)
 	_, err = s.cron.AddFunc(intervals.Enrich, func() {
@@ -79,13 +86,12 @@ func (s *Scheduler) Start(intervals CronIntervals) {
 	s.cron.Start()
 	s.logger.Info("scheduler started",
 		zap.String("fetch", intervals.Fetch),
-		zap.String("filter", "continuous (background)"),
 		zap.String("enrich", intervals.Enrich),
 		zap.String("quality", intervals.Quality))
 }
 
 func (s *Scheduler) Stop() {
-	s.cancel()  // Stop the filter worker
+	s.cancel()
 	s.cron.Stop()
 	s.logger.Info("scheduler stopped")
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -79,6 +80,17 @@ func main() {
 	}
 	logger.Info("admin user ready", zap.String("username", cfg.Auth.AdminUsername))
 
+	// Ensure HackerNews Hot RSS exists
+	hnFeed := model.Feed{
+		URL:   "https://tg.i-c-a.su/rss/hacker_news_zh",
+		Title: "HackerNews 热榜",
+	}
+	if err := db.Where("url = ?", hnFeed.URL).FirstOrCreate(&hnFeed).Error; err != nil {
+		logger.Error("failed to seed HackerNews feed", zap.Error(err))
+	} else {
+		logger.Info("HackerNews feed seeded")
+	}
+
 	// Init services
 	feedSvc := service.NewFeedService(feedRepo, logger)
 	fetcherSvc := service.NewFetcherService(
@@ -90,17 +102,15 @@ func main() {
 
 	// Init AI stages (decoupled)
 	aiClient := aiutil.NewClient(cfg.AI.BaseURL, cfg.AI.APIKey, cfg.AI.Model, cfg.AI.Timeout)
-	var filterStage ai_pipeline.Stage
 	var enrichStage ai_pipeline.Stage
 	if cfg.AI.Enabled {
 		// Seed default stage configs from global AI settings
 		if err := stageConfigRepo.SeedDefaults(cfg.AI.BaseURL, cfg.AI.APIKey, cfg.AI.Model); err != nil {
 			logger.Warn("failed to seed stage configs", zap.Error(err))
 		}
-		filterStage = ai_pipeline.NewFilterStage(aiClient, stageConfigRepo, articleRepo, logger, cfg.AI.Timeout)
 		enrichStage = ai_pipeline.NewEnrichStage(aiClient, stageConfigRepo, logger, cfg.AI.Timeout)
 	}
-	aiSvc := service.NewAIService(articleRepo, filterStage, enrichStage, logger, db, cfg.AI.FilterConcurrent)
+	aiSvc := service.NewAIService(articleRepo, enrichStage, logger, db, cfg.AI.EnrichConcurrent)
 
 	qualitySvc := service.NewQualityService(
 		feedRepo, articleRepo, logger,
@@ -122,13 +132,19 @@ func main() {
 		}
 	}
 
+	// Immediate HackerNews Fetch on startup
+	go func() {
+		logger.Info("running initial HackerNews fetch on startup")
+		_ = fetcherSvc.FetchByURL(context.Background(), "https://tg.i-c-a.su/rss/hacker_news_zh")
+	}()
+
 	// Start scheduler
 	sched := scheduler.New(logger, fetcherSvc, aiSvc, qualitySvc)
 	sched.Start(scheduler.CronIntervals{
-		Fetch:   durationToCron(cfg.Fetcher.Interval),
-		Filter:  durationToCron(cfg.AI.FilterInterval),
-		Enrich:  durationToCron(cfg.AI.EnrichInterval),
-		Quality: durationToCron(cfg.Quality.EvaluationInterval),
+		Fetch:           durationToCron(cfg.Fetcher.Interval),
+		FetchHackerNews: durationToCron(cfg.Fetcher.HackerNewsInterval),
+		Enrich:          durationToCron(cfg.AI.EnrichInterval),
+		Quality:         durationToCron(cfg.Quality.EvaluationInterval),
 	})
 	defer sched.Stop()
 

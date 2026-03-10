@@ -31,9 +31,7 @@ ai:
   api_key: "your-api-key-here"  # 请替换为你的 API key
   base_url: "https://api.deepseek.com/v1"
   model: "deepseek-chat"
-  timeout: 60s
-  filter_interval: 5m
-  filter_concurrent: 5
+  timeout: 10m
   enrich_interval: 10m
   enrich_concurrent: 3
 

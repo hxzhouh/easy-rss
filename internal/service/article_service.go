@@ -19,8 +19,8 @@ func (s *ArticleService) GetByID(id int64) (*model.Article, error) {
 	return s.repo.GetByID(id)
 }
 
-func (s *ArticleService) List(page, pageSize int, feedID *int64, aiStatus *int16) ([]model.Article, int64, error) {
-	return s.repo.List(page, pageSize, feedID, aiStatus)
+func (s *ArticleService) List(page, pageSize int, feedID *int64, aiStatus *int16, excludeFeedID *int64) ([]model.Article, int64, error) {
+	return s.repo.List(page, pageSize, feedID, aiStatus, excludeFeedID)
 }
 
 func (s *ArticleService) Delete(id int64) error {

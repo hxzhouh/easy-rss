@@ -15,7 +15,6 @@ import (
 
 type AIService struct {
 	articleRepo *repository.ArticleRepo
-	filterStage ai_pipeline.Stage
 	enrichStage ai_pipeline.Stage
 	logger      *zap.Logger
 	db          *gorm.DB
@@ -24,7 +23,6 @@ type AIService struct {
 
 func NewAIService(
 	articleRepo *repository.ArticleRepo,
-	filterStage ai_pipeline.Stage,
 	enrichStage ai_pipeline.Stage,
 	logger *zap.Logger,
 	db *gorm.DB,
@@ -32,7 +30,6 @@ func NewAIService(
 ) *AIService {
 	return &AIService{
 		articleRepo: articleRepo,
-		filterStage: filterStage,
 		enrichStage: enrichStage,
 		logger:      logger,
 		db:          db,
@@ -40,41 +37,10 @@ func NewAIService(
 	}
 }
 
-// ProcessFilter runs continuously, processing one pending article at a time.
-// Articles pass → passed(2), articles fail → filtered_out(1).
-// Runs until context is cancelled or no more pending articles.
-func (s *AIService) ProcessFilter(ctx context.Context) {
-	for {
-		select {
-		case <-ctx.Done():
-			s.logger.Info("ProcessFilter stopped")
-			return
-		default:
-		}
-
-		// Get one pending article
-		articles, err := s.articleRepo.ListByStatus(model.AIStatusPending, 1)
-		if err != nil {
-			s.logger.Error("failed to list pending articles for filter", zap.Error(err))
-			time.Sleep(5 * time.Second)
-			continue
-		}
-		if len(articles) == 0 {
-			// No pending articles, wait and retry
-			time.Sleep(5 * time.Second)
-			continue
-		}
-
-		// Process single article
-		article := articles[0]
-		s.processStage(ctx, &article, s.filterStage, model.AIStatusPassed)
-	}
-}
-
-// ProcessEnrich picks up passed(2) articles and runs Stage 2 (enrich).
+// ProcessEnrich picks up pending(0) articles and runs Stage 2 (enrich).
 // Articles complete → enriched(3).
 func (s *AIService) ProcessEnrich(ctx context.Context) {
-	articles, err := s.articleRepo.ListByStatus(model.AIStatusPassed, s.maxConc*2)
+	articles, err := s.articleRepo.ListByStatus(model.AIStatusPending, s.maxConc*2)
 	if err != nil {
 		s.logger.Error("failed to list passed articles for enrich", zap.Error(err))
 		return

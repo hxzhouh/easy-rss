@@ -196,7 +196,7 @@ func (s *Server) listArticles(ctx context.Context, req *mcp.CallToolRequest, inp
 		pageSize = 20
 	}
 
-	articles, total, err := s.articleRepo.List(page, pageSize, input.FeedID, input.AIStatus)
+	articles, total, err := s.articleRepo.List(page, pageSize, input.FeedID, input.AIStatus, nil)
 	if err != nil {
 		return errResult("获取文章列表失败: " + err.Error()), ListArticlesOutput{}, nil
 	}

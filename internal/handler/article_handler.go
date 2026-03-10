@@ -39,7 +39,7 @@ func (h *ArticleHandler) List(c *gin.Context) {
 		}
 	}
 
-	articles, total, err := h.articleSvc.List(page, pageSize, feedID, aiStatus)
+	articles, total, err := h.articleSvc.List(page, pageSize, feedID, aiStatus, nil)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/hxzhouh/easy-rss/internal/model"
 	"github.com/hxzhouh/easy-rss/internal/repository"
@@ -13,58 +14,60 @@ import (
 
 // 英文版 Prompt
 const enrichSystemPromptEN = `You are a professional content analyst and translator. Analyze the given article and provide:
-1. A quality score from 0 to 100 (based on depth, originality, clarity, and informativeness)
-2. A concise summary in English (2-3 sentences)
-3. A concise summary translated to Chinese (2-3 sentences)
-4. The article title translated to Chinese
-5. Up to 5 relevant tags/keywords
-6. Full article content translated to Chinese (complete translation, not summarized)
-7. Refined Chinese translation of the content (polished and improved version of the translation in #6)
+1. Is it an advertisement or promotional content?
+2. Is it meaningless content (spam, gibberish, clickbait with no substance)?
+3. A quality score from 0 to 100 (based on depth, originality, clarity, and informativeness, < 75 will be filtered out)
+4. A concise summary in English (2-3 sentences)
+5. A concise summary translated to Chinese (2-3 sentences)
+6. The article title translated to Chinese
+7. Up to 5 relevant tags/keywords
+8. Refined Chinese translation of the full content (accurate, fluent, and natural in Chinese)
 
-For the translation process:
-- First, translate the full article content to Chinese accurately
-- Then, refine the translation to improve fluency, fix any awkward phrasing, and ensure it reads naturally in Chinese
+Respond EXACTLY in this format. First provide valid JSON for metadata, followed by the delimiter '===CONTENT===', followed by the full translated text markdown.
 
-Respond ONLY with valid JSON in the following format, no other text:
 {
+  "is_ad": false,
+  "is_meaningless": false,
   "quality_score": 85.0,
+  "reason": "optional reason if quality < 75",
   "summary": "English summary here.",
   "summary_zh": "中文摘要。",
   "translated_title": "中文标题",
-  "tags": ["tag1", "tag2"],
-  "translated_content": "文章全文的初始中文翻译（完整内容）",
-  "refined_translation": "精校后的中文翻译（润色优化后的版本）"
-}`
+  "tags": ["tag1", "tag2"]
+}
+===CONTENT===
+在这里输出文章全文的精校中文翻译（完整内容，Markdown 格式）。`
 
 // 中文版 Prompt
 const enrichSystemPromptZH = `你是一位专业的内容分析师和翻译家。请分析给定的文章并提供：
-1. 质量评分（0-100分，基于深度、原创性、清晰度和信息丰富度）
-2. 简洁的英文摘要（2-3句话）
-3. 简洁的中文摘要（2-3句话）
-4. 中文标题翻译
-5. 最多5个相关标签/关键词
-6. 文章全文的中文翻译（完整翻译，不是摘要）
-7. 精校后的中文翻译（对第6项的润色优化版本）
+1. 是否为广告或宣传内容？
+2. 是否为无意义内容（垃圾信息、乱码、无实质内容的标题党）？
+3. 质量评分（0-100分，基于深度、原创性、清晰度和信息丰富度，<75分将被过滤）
+4. 简洁的英文摘要（2-3句话）
+5. 简洁的中文摘要（2-3句话）
+6. 中文标题翻译
+7. 最多5个相关标签/关键词
+8. 文章全文的精校中文翻译（准确、流畅、符合中文阅读习惯）
 
-翻译流程要求：
-- 第一步：准确地将文章全文翻译成中文
-- 第二步：精校翻译结果，提升流畅度，修正生硬表达，确保符合中文阅读习惯
+请**严格**按照以下格式回复：首先提供用于元数据的合法 JSON，然后是分隔符 '===CONTENT==='，最后是完整的中文翻译 Markdown 文本。
 
-请只返回有效的 JSON 格式，不要包含其他文本：
 {
+  "is_ad": false,
+  "is_meaningless": false,
   "quality_score": 85.0,
+  "reason": "如果评分低于75，提供简短理由",
   "summary": "English summary here.",
   "summary_zh": "中文摘要。",
   "translated_title": "中文标题",
-  "tags": ["标签1", "标签2"],
-  "translated_content": "文章全文的初始中文翻译（完整内容）",
-  "refined_translation": "精校后的中文翻译（润色优化后的版本）"
-}`
+  "tags": ["标签1", "标签2"]
+}
+===CONTENT===
+在这里输出文章全文的精校中文翻译（完整翻译，使用 Markdown 格式排版）。`
 
 // 默认使用中文版 Prompt
 const enrichSystemPrompt = enrichSystemPromptZH
 
-// EnrichStage is Stage 2: scores, summarizes, and translates articles.
+// EnrichStage is the unified Stage: filters, scores, summarizes, and translates articles.
 type EnrichStage struct {
 	defaultClient   *aiutil.Client
 	stageConfigRepo *repository.StageConfigRepo
@@ -73,13 +76,14 @@ type EnrichStage struct {
 }
 
 type enrichResponse struct {
-	QualityScore         float64  `json:"quality_score"`
-	Summary              string   `json:"summary"`
-	SummaryZh            string   `json:"summary_zh"`
-	TranslatedTitle      string   `json:"translated_title"`
-	Tags                 []string `json:"tags"`
-	TranslatedContent    string   `json:"translated_content"`
-	RefinedTranslation   string   `json:"refined_translation"`
+	IsAd            bool     `json:"is_ad"`
+	IsMeaningless   bool     `json:"is_meaningless"`
+	QualityScore    float64  `json:"quality_score"`
+	Reason          string   `json:"reason"`
+	Summary         string   `json:"summary"`
+	SummaryZh       string   `json:"summary_zh"`
+	TranslatedTitle string   `json:"translated_title"`
+	Tags            []string `json:"tags"`
 }
 
 func NewEnrichStage(
@@ -123,8 +127,9 @@ func GetEnrichPrompts() map[string]string {
 
 func (s *EnrichStage) Process(ctx context.Context, article *model.Article) (bool, error) {
 	content := article.Content
-	if len(content) > 6000 {
-		content = content[:6000]
+	// Allow more content if we are skipping multiple stages
+	if len(content) > 8000 {
+		content = content[:8000]
 	}
 
 	userMsg := fmt.Sprintf("Title: %s\n\nContent:\n%s", article.Title, content)
@@ -135,29 +140,61 @@ func (s *EnrichStage) Process(ctx context.Context, article *model.Article) (bool
 		return false, fmt.Errorf("AI enrich call: %w", err)
 	}
 
-	reply = extractJSON(reply)
+	jsonPart, markdownPart := extractTwoPartOutput(reply)
 
 	var resp enrichResponse
-	if err := json.Unmarshal([]byte(reply), &resp); err != nil {
-		s.logger.Warn("failed to parse enrich response", zap.String("reply", reply), zap.Error(err))
-		return true, nil
+	if err := json.Unmarshal([]byte(jsonPart), &resp); err != nil {
+		s.logger.Warn("failed to parse enrich response JSON", zap.String("json_part", jsonPart), zap.Error(err))
+		// Log the error but continue if possible, or fallback
+		return false, fmt.Errorf("invalid json format")
 	}
 
-	// Merge enrich results into the AI result
-	if article.AIResult == nil {
-		article.AIResult = &model.AIResult{ArticleID: article.ID}
+	// Save AI result
+	aiResult := &model.AIResult{
+		ArticleID:         article.ID,
+		IsAd:              resp.IsAd,
+		IsMeaningless:     resp.IsMeaningless,
+		FilterReason:      resp.Reason,
+		QualityScore:      resp.QualityScore,
+		Summary:           resp.Summary,
+		SummaryZh:         resp.SummaryZh,
+		TranslatedTitle:   resp.TranslatedTitle,
+		Tags:              resp.Tags,
+		TranslatedContent: markdownPart,
 	}
-	article.AIResult.QualityScore = resp.QualityScore
-	article.AIResult.Summary = resp.Summary
-	article.AIResult.SummaryZh = resp.SummaryZh
-	article.AIResult.TranslatedTitle = resp.TranslatedTitle
-	article.AIResult.Tags = resp.Tags
-	// 优先使用精校版本，如果没有则使用初译版本
-	if resp.RefinedTranslation != "" {
-		article.AIResult.TranslatedContent = resp.RefinedTranslation
-	} else {
-		article.AIResult.TranslatedContent = resp.TranslatedContent
+	article.AIResult = aiResult
+
+	// Filter out if: ad, meaningless, or quality score < 75
+	if resp.IsAd || resp.IsMeaningless || resp.QualityScore < 75 {
+		if resp.QualityScore < 75 && resp.Reason == "" {
+			aiResult.FilterReason = fmt.Sprintf("Quality score too low (%.1f < 75)", resp.QualityScore)
+		}
+		return false, nil
 	}
 
 	return true, nil
+}
+
+// extractTwoPartOutput splits the raw LLM response into JSON metadata and Markdown content
+func extractTwoPartOutput(reply string) (string, string) {
+	reply = strings.TrimSpace(reply)
+	parts := strings.Split(reply, "===CONTENT===")
+
+	jsonStr := strings.TrimSpace(parts[0])
+	jsonStr = strings.TrimPrefix(jsonStr, "```json")
+	jsonStr = strings.TrimPrefix(jsonStr, "```")
+	jsonStr = strings.TrimSuffix(jsonStr, "```")
+	jsonStr = strings.TrimSpace(jsonStr)
+
+	markdownStr := ""
+	if len(parts) > 1 {
+		markdownStr = strings.TrimSpace(parts[1])
+	}
+	// Also strip markdown tags from the translated output if the LLM wrapped it
+	markdownStr = strings.TrimPrefix(markdownStr, "```markdown")
+	markdownStr = strings.TrimPrefix(markdownStr, "```")
+	markdownStr = strings.TrimSuffix(markdownStr, "```")
+	markdownStr = strings.TrimSpace(markdownStr)
+
+	return jsonStr, markdownStr
 }

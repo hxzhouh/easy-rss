@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -80,6 +81,16 @@ func (s *FetcherService) FetchOne(ctx context.Context, feedID int64) error {
 	return nil
 }
 
+// FetchByURL fetches a single feed by URL.
+func (s *FetcherService) FetchByURL(ctx context.Context, url string) error {
+	feed, err := s.feedRepo.GetByURL(url)
+	if err != nil {
+		return err
+	}
+	s.fetchFeed(ctx, feed)
+	return nil
+}
+
 func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 	ctx, cancel := context.WithTimeout(ctx, s.timeout)
 	defer cancel()
@@ -139,6 +150,43 @@ func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 			content = item.Description
 		}
 
+		// Specialized parsing for HackerNews feed formats
+		if feed.URL == "https://tg.i-c-a.su/rss/hacker_news_zh" {
+			// Extract title cleanly (remove [Media] prefix and trailing links)
+			title := item.Title
+			title = strings.TrimPrefix(title, "[Media] ")
+			if idx := strings.Index(title, "原文："); idx != -1 {
+				title = strings.TrimSpace(title[:idx])
+			}
+			item.Title = title
+
+			// Extract original source link
+			linkRegex := regexp.MustCompile(`原文：<a href="(.*?)">`)
+			matches := linkRegex.FindStringSubmatch(content)
+			if len(matches) > 1 {
+				item.Link = matches[1]
+			}
+
+			// Extract the blockquote content and use that as the primary translation source
+			bqRegex := regexp.MustCompile(`(?s)<blockquote>(.*?)</blockquote>`)
+			bqMatches := bqRegex.FindStringSubmatch(content)
+			if len(bqMatches) > 1 {
+				// Strip inner HTML tags from the blockquote for a cleaner read
+				cleanText := strings.ReplaceAll(bqMatches[1], "</br>", "\n")
+				cleanText = strings.ReplaceAll(cleanText, "<br>", "\n")
+
+				// Strip the internal Telegraph bolding and cites headers
+				headerRegex := regexp.MustCompile(`(?s)<cite>.*?</cite>.*?<br/>`)
+				cleanText = headerRegex.ReplaceAllString(cleanText, "")
+
+				// Strip remaining bold tags
+				cleanText = strings.ReplaceAll(cleanText, "<b>", "")
+				cleanText = strings.ReplaceAll(cleanText, "</b>", "")
+
+				content = strings.TrimSpace(cleanText)
+			}
+		}
+
 		// 如果内容太短，尝试抓取全文
 		if len(content) < 1000 && item.Link != "" {
 			fullContent, err := s.fetchArticleContent(ctx, item.Link)
@@ -150,6 +198,11 @@ func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 			}
 		}
 
+		aiStatus := model.AIStatusPending
+		if feed.URL == "https://tg.i-c-a.su/rss/hacker_news_zh" {
+			aiStatus = model.AIStatusEnriched
+		}
+
 		article := &model.Article{
 			FeedID:      &feed.ID,
 			GUID:        guid,
@@ -159,13 +212,35 @@ func (s *FetcherService) fetchFeed(ctx context.Context, feed *model.Feed) {
 			Content:     content,
 			PublishedAt: publishedAt,
 			Source:      "rss",
-			AIStatus:    model.AIStatusPending,
+			AIStatus:    aiStatus,
 		}
 
+		// Save article to DB
 		if err := s.articleRepo.Upsert(article); err != nil {
 			s.logger.Warn("upsert article failed",
 				zap.String("guid", guid), zap.Error(err))
 			continue
+		}
+
+		// Also initialize a blank AIResult for HackerNews so it doesn't crash UI template checks
+		if feed.URL == "https://tg.i-c-a.su/rss/hacker_news_zh" {
+			// We only save AIResult if the article was successfully upserted and we have the new ID
+			article, err = s.articleRepo.GetByGUID(&feed.ID, guid)
+			if err == nil {
+				aiResult := &model.AIResult{
+					ArticleID:         article.ID,
+					IsAd:              false,
+					IsMeaningless:     false,
+					QualityScore:      100, // Mark as high quality by default
+					TranslatedTitle:   item.Title,
+					Summary:           "",
+					SummaryZh:         "HackerNews 离线导入",
+					TranslatedContent: content,
+					ProcessedAt:       time.Now(),
+				}
+				// Use the context without timeout to save the result safely
+				_ = s.articleRepo.SaveAIResult(aiResult)
+			}
 		}
 		newCount++
 	}

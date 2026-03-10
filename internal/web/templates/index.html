@@ -372,7 +372,9 @@
                 <span class="logo-text">Easy-RSS</span>
             </a>
             <nav class="nav-links">
-                <a href="/" class="nav-link active">文章</a>
+                <a href="/" class="nav-link {{if ne .CurrentTab " hackernews"}}active{{end}}">文章</a>
+                <a href="/?tab=hackernews" class="nav-link {{if eq .CurrentTab " hackernews"}}active{{end}}">HackerNews
+                    热榜</a>
             </nav>
             <div class="header-stats">
                 共 <span style="color:var(--text-secondary);font-weight:600">{{.Total}}</span> 篇文章
@@ -439,11 +441,13 @@
                     {{end}}
                 </div>
 
-                <!-- Summary -->
+                <!-- Summary (Hidden for HackerNews) -->
+                {{if ne $.CurrentTab "hackernews"}}
                 {{if .SummaryZh}}
                 <div class="article-summary">{{.SummaryZh}}</div>
                 {{else if .Summary}}
                 <div class="article-summary">{{.Summary}}</div>
+                {{end}}
                 {{end}}
 
                 <!-- Tags -->

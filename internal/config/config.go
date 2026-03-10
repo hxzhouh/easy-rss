@@ -51,10 +51,11 @@ type AuthConfig struct {
 }
 
 type FetcherConfig struct {
-	Interval      time.Duration `mapstructure:"interval"`
-	Timeout       time.Duration `mapstructure:"timeout"`
-	UserAgent     string        `mapstructure:"user_agent"`
-	MaxConcurrent int           `mapstructure:"max_concurrent"`
+	Interval           time.Duration `mapstructure:"interval"`
+	Timeout            time.Duration `mapstructure:"timeout"`
+	UserAgent          string        `mapstructure:"user_agent"`
+	MaxConcurrent      int           `mapstructure:"max_concurrent"`
+	HackerNewsInterval time.Duration `mapstructure:"hacker_news_interval"`
 }
 
 type AIConfig struct {
@@ -64,8 +65,6 @@ type AIConfig struct {
 	BaseURL          string        `mapstructure:"base_url"`
 	Model            string        `mapstructure:"model"`
 	Timeout          time.Duration `mapstructure:"timeout"`
-	FilterInterval   time.Duration `mapstructure:"filter_interval"`
-	FilterConcurrent int           `mapstructure:"filter_concurrent"`
 	EnrichInterval   time.Duration `mapstructure:"enrich_interval"`
 	EnrichConcurrent int           `mapstructure:"enrich_concurrent"`
 }

@@ -110,6 +110,7 @@ type PageData struct {
 	TotalPages int
 	FeedID     *int64
 	FeedName   string
+	CurrentTab string
 }
 
 type ArticleView struct {
@@ -152,15 +153,31 @@ func (h *WebHandler) Index(c *gin.Context) {
 
 	// Only show enriched articles (ai_status = 3)
 	aiStatus := int16(3)
+
 	var feedID *int64
-	if fid := c.Query("feed_id"); fid != "" {
+	var excludeFeedID *int64
+	// Check for tab=hackernews
+	currentTab := c.Query("tab")
+	if currentTab == "hackernews" {
+		// Find the HN feed
+		if hnFeed, err := h.feedRepo.GetByURL("https://tg.i-c-a.su/rss/hacker_news_zh"); err == nil {
+			id := hnFeed.ID
+			feedID = &id
+		}
+	} else if fid := c.Query("feed_id"); fid != "" {
 		id, err := strconv.ParseInt(fid, 10, 64)
 		if err == nil {
 			feedID = &id
 		}
+	} else {
+		// Default view: exclude HackerNews feed
+		if hnFeed, err := h.feedRepo.GetByURL("https://tg.i-c-a.su/rss/hacker_news_zh"); err == nil {
+			id := hnFeed.ID
+			excludeFeedID = &id
+		}
 	}
 
-	articles, total, err := h.articleRepo.List(page, pageSize, feedID, &aiStatus)
+	articles, total, err := h.articleRepo.List(page, pageSize, feedID, &aiStatus, excludeFeedID)
 	if err != nil {
 		c.String(500, "Internal Server Error")
 		return
@@ -209,6 +226,7 @@ func (h *WebHandler) Index(c *gin.Context) {
 		TotalPages: totalPages,
 		FeedID:     feedID,
 		FeedName:   feedName,
+		CurrentTab: currentTab,
 	}
 
 	c.Header("Content-Type", "text/html; charset=utf-8")

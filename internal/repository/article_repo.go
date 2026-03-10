@@ -26,19 +26,36 @@ func (r *ArticleRepo) Create(article *model.Article) error {
 	return r.db.Create(article).Error
 }
 
+func (r *ArticleRepo) GetByGUID(feedID *int64, guid string) (*model.Article, error) {
+	var article model.Article
+	q := r.db
+	if feedID != nil {
+		q = q.Where("feed_id = ?", *feedID)
+	}
+	err := q.Where("guid = ?", guid).First(&article).Error
+	return &article, err
+}
+
+func (r *ArticleRepo) SaveAIResult(aiResult *model.AIResult) error {
+	return r.db.Save(aiResult).Error
+}
+
 func (r *ArticleRepo) GetByID(id int64) (*model.Article, error) {
 	var article model.Article
 	err := r.db.Preload("AIResult").Preload("Feed").First(&article, id).Error
 	return &article, err
 }
 
-func (r *ArticleRepo) List(page, pageSize int, feedID *int64, aiStatus *int16) ([]model.Article, int64, error) {
+func (r *ArticleRepo) List(page, pageSize int, feedID *int64, aiStatus *int16, excludeFeedID *int64) ([]model.Article, int64, error) {
 	var articles []model.Article
 	var total int64
 
 	q := r.db.Model(&model.Article{})
 	if feedID != nil {
 		q = q.Where("feed_id = ?", *feedID)
+	}
+	if excludeFeedID != nil {
+		q = q.Where("feed_id != ?", *excludeFeedID)
 	}
 	if aiStatus != nil {
 		q = q.Where("ai_status = ?", *aiStatus)

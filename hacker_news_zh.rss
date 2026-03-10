@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="https://www.rssboard.org/media-rss" version="2.0">
+  <channel>
+    <title>Hacker News 摘要</title>
+    <link>https://t.me/s/hacker_news_zh</link>
+    <description>自动转发 Hacker News 首页达到 150 分的条目
+使用 AI 生成中文摘要</description>
+    <pubDate>Tue, 10 Mar 2026 04:29:42 +0300</pubDate>
+    <lastBuildDate>Tue, 10 Mar 2026 04:29:42 +0300</lastBuildDate>
+    <image>
+      <url>https://tg.i-c-a.su/icon/hacker_news_zh/icon.jpg</url>
+      <title>favicon</title>
+      <link>https://t.me/s/hacker_news_zh</link>
+    </image>
+    <atom:link rel="self" type="application/rss+xml" href="https://tg.i-c-a.su/rss/hacker_news_zh"/>
+    <item>
+      <title>[Media] DARPA 的新型 X-76原文：https://www.darpa.mil/news/2026/darpa-new-x-76-speed-of-jet-fre [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/dzzhD9POeIwsvfZH0NDjiw-03-10"&gt;&lt;b&gt;DARPA 的新型 X-76&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://www.darpa.mil/news/2026/darpa-new-x-76-speed-of-jet-freedom-of-helicopter"&gt;https://www.darpa.mil/news/2026/darpa-new-x-76-speed-of-jet-freedom-of-helicopter&lt;/a&gt;&lt;br&gt;阅读时间：2 分钟&lt;br&gt;分数：152&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/dzzhD9POeIwsvfZH0NDjiw-03-10"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;DARPA 的新型 X-76&lt;/b&gt;&lt;/br&gt;原标题：DARPA’s new X-76 项目背景与目标 美国国防高级研究计划局（DARPA）的“高速且独立于跑道的性能技术”（SPRINT）程序旨在解决战场上的一个两难选择：是选择需要长跑道的高速固定翼飞机，还是选择速度较慢但具备随处降落灵活性的直升机。该程序正式命名其验证机为 X-76。 研发进展与合作伙伴 目前，X-76 已经成功通过了关键设计审查（CDR），正式进入建造阶段。该项目由贝尔德事隆公司（Bell Textron, Inc.）负责制造。X-76 这个编号具有特殊的象征意义，恰逢美国建国 250 周年，其编号致敬了 1776 年的革命精神。 SPRINT 程序是 DARPA 与美国特种作战司令部共同开展的合作项目。其核心目标是开发出能够打破长期以来军事航空领域的权衡限制的新技术，即让飞机既能像喷气式飞机一样高速巡航，又具备垂直起降的能力。 核心技术指标 X-76 验证机旨在证明以下关键技术能力： • 巡航速度： 飞行速度需超过 400 节（约 740 公里/小时）。 • 悬停能力： 能够在严苛的野外环境下进行悬停。 • 起降灵活性： 能够直接从未经处理的简易表面进行操作，彻底摆脱对跑道的依赖。…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:28:13 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19445</link>
+      <guid>https://t.me/hacker_news_zh/19445</guid>
+      <media:community>
+        <media:statistics views="16"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] 托尼·霍尔爵士逝世原文：http://lefenetrou.blogspot.com/2026/03/in-memoriam-tony-hoare.html阅读 [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/ZcAL1Pgdf-IT7iZOyQwzjQ-03-10"&gt;&lt;b&gt;托尼·霍尔爵士逝世&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="http://lefenetrou.blogspot.com/2026/03/in-memoriam-tony-hoare.html"&gt;http://lefenetrou.blogspot.com/2026/03/in-memoriam-tony-hoare.html&lt;/a&gt;&lt;br&gt;阅读时间：3 分钟&lt;br&gt;分数：202&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/ZcAL1Pgdf-IT7iZOyQwzjQ-03-10"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;托尼·霍尔爵士逝世&lt;/b&gt;&lt;/br&gt;原标题：Sir Tony Hoare has died 博客基本情况 此页面出自名为 Quoras auras-tu 'chabat de platussar ? 的个人博客。博客名称具有地方特色，意为“你什么时候才能停止唠叨”。博主 AREDIUS44 居住在法国南特，同时也是利穆赞和南特地区的成员。该博客的内容跨度极广，涵盖教育、高等教育、社会评论、文学阅读以及作者居住地利穆赞、佩里戈尔和南特的相关资讯。 悼念托尼·霍尔爵士 这篇发表于2026年3月9日（周一）的文章主要为了纪念计算机科学界的巨匠 托尼·霍尔（Tony Hoare）。作者提到，他从 Jonathan Bowen 处获悉，托尼·霍尔爵士已于2026年3月5日星期四逝世。 作者在文中将托尼·霍尔视为自己的导师之一，认为其著作对他的学术和专业成长影响深远。文章重点列举了两部极具影响力的学术著作： • 《结构化编程》（Structured Programming）：由 Dahl、Dijkstra 和 Hoare 共同编写，1972年由学术出版社出版。 • 《通信顺序进程》（Communicating Sequential Processes，简称…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 03:28:22 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19444</link>
+      <guid>https://t.me/hacker_news_zh/19444</guid>
+      <media:community>
+        <media:statistics views="48"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] Oracle 正在用未来的债务建造过时的数据中心原文：https://www.cnbc.com/2026/03/09/oracle-is-build [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/MV0fYp-psceq9x-2Z3FYSQ-03-09"&gt;&lt;b&gt;Oracle 正在用未来的债务建造过时的数据中心&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://www.cnbc.com/2026/03/09/oracle-is-building-yesterdays-data-centers-with-tomorrows-debt.html"&gt;https://www.cnbc.com/2026/03/09/oracle-is-building-yesterdays-data-centers-with-tomorrows-debt.html&lt;/a&gt;&lt;br&gt;阅读时间：2 分钟&lt;br&gt;分数：206&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/MV0fYp-psceq9x-2Z3FYSQ-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;Oracle 正在用未来的债务建造过时的数据中心&lt;/b&gt;&lt;/br&gt;原标题：Oracle is building yesterday's data centers with tomorrow's debt OpenAI 缩减与 Oracle 的合作规模 OpenAI 正在放弃与 Oracle 合作扩建其位于德克萨斯州阿比林的旗舰级 Stargate 数据中心。这一决定的核心原因是 OpenAI 希望在新的站点部署最新一代的 Nvidia 图形处理器（GPU），而不是继续在现有项目中维持现状。 目前阿比林站点的项目预计将使用 Nvidia 的 Blackwell 处理器，但相关电力供应预计在一年内无法就位。由于 Nvidia 首席执行官黄仁勋已经将芯片更新周期从每两年一次缩短为每年一次，OpenAI 希望到电力上线时，能够直接在其他地点的更大集群中使用下一代芯片。 芯片更新速度与基础设施建设的矛盾 人工智能芯片的升级速度目前已经超过了数据中心的建设周期，这暴露了 AI 行业面临的一个关键风险。 1. 性能差距巨大：Nvidia 在今年 1 月的 CES 上展示了 Vera Rubin 处理器，并已投入生产。该芯片的推理性能是 Blackwell 的五倍。 2. 竞…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:28:20 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19443</link>
+      <guid>https://t.me/hacker_news_zh/19443</guid>
+      <media:community>
+        <media:statistics views="53" forwards="1"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] 员工披露曾观看 Ray-Ban Meta 智能眼镜拍摄的用户如厕画面原文：https://arstechnica.com/gadgets/20 [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/LqayMC8BJKmd57Wp5Gp40w-03-09"&gt;&lt;b&gt;员工披露曾观看 Ray-Ban Meta 智能眼镜拍摄的用户如厕画面&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://arstechnica.com/gadgets/2026/03/workers-report-watching-ray-ban-meta-shot-footage-of-people-using-the-bathroom/"&gt;https://arstechnica.com/gadgets/2026/03/workers-report-watching-ray-ban-meta-shot-footage-of-people-using-the-bathroom/&lt;/a&gt;&lt;br&gt;阅读时间：5 分钟&lt;br&gt;分数：202&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/LqayMC8BJKmd57Wp5Gp40w-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;员工披露曾观看 Ray-Ban Meta 智能眼镜拍摄的用户如厕画面&lt;/b&gt;&lt;/br&gt;原标题：Workers report watching Ray-Ban Meta-shot footage of people using the bathroom 瑞典媒体披露员工观看私密影像 根据瑞典报纸《Svenska Dagbladet》、《Göteborgs-Posten》与肯尼亚记者 Naipanoi Lepapa 的联合调查报道，Meta 的分包商员工在对数据进行标注时，观看了由 Ray-Ban Meta 智能眼镜拍摄的大量隐私画面。这些员工受雇于总部位于肯尼亚的 Sama 公司，负责为 Meta 的 AI 系统提供视频、图像和语音标注服务。 报道基于对 Sama 公司 30 多名不同级别员工的采访。接受采访的人员表示，他们在处理智能眼镜拍摄的素材时，经常看到涉及用户隐私的敏感内容，包括： • 用户进行性行为的画面。 • 用户在洗手间上厕所的影像。 • 一名女性在不知情的状况下，在丈夫摘下眼镜后的房间内更换衣服。 • 用户伴侣全身赤裸走出浴室的场景。 • 用户无意中记录下的银行卡信息或正在观看的情色内容。 Meta 的回应与官方政策 Meta 在向媒体发…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 03:17:16 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19442</link>
+      <guid>https://t.me/hacker_news_zh/19442</guid>
+      <media:community>
+        <media:statistics views="55" forwards="1"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] JSLinux 现已支持 x86_64原文：https://bellard.org/jslinux/阅读时间：1 分钟分数：237</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/RlGhZaabt6JaDGvYX3MPOw-03-09"&gt;&lt;b&gt;JSLinux 现已支持 x86_64&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://bellard.org/jslinux/"&gt;https://bellard.org/jslinux/&lt;/a&gt;&lt;br&gt;阅读时间：1 分钟&lt;br&gt;分数：237&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/RlGhZaabt6JaDGvYX3MPOw-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;JSLinux 现已支持 x86_64&lt;/b&gt;&lt;/br&gt;原标题：JSLinux Now Supports x86_64 JSLinux 是由 Fabrice Bellard 开发的一个网页应用。它允许用户直接在网页浏览器中运行 Linux 或其他操作系统。 目前网页提供了多种基于不同处理器架构的模拟系统： x86_64 架构系统 • Alpine Linux 3.23.2：使用控制台界面，支持 VFsync 文件访问。此系统特别集成了对 AVX-512 和 APX 指令集的支持。 x86 架构系统 • Alpine Linux 3.12.0（控制台版）：支持 VFsync 访问。 • Alpine Linux 3.12.0（X Window 窗口版）：支持 VFsync 访问。用户可以通过点击鼠标右键调出菜单。 • Windows 2000：提供图形化界面，但不支持 VFsync。 • FreeDOS：提供 VGA 文本界面，不支持 VFsync。 riscv64 架构系统 • Buildroot (Linux)（控制台版）：支持 VFsync 访问。 • Buildroot (Linux)（X Window…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:28:01 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19441</link>
+      <guid>https://t.me/hacker_news_zh/19441</guid>
+      <media:community>
+        <media:statistics views="60"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] Bluesky 首席执行官 Jay Graber 将离任原文：https://bsky.social/about/blog/03-09-2026-a-new-chap [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/iw8gUaInh7aQssDHPojutQ-03-09"&gt;&lt;b&gt;Bluesky 首席执行官 Jay Graber 将离任&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://bsky.social/about/blog/03-09-2026-a-new-chapter-for-bluesky"&gt;https://bsky.social/about/blog/03-09-2026-a-new-chapter-for-bluesky&lt;/a&gt;&lt;br&gt;阅读时间：2 分钟&lt;br&gt;分数：299&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/iw8gUaInh7aQssDHPojutQ-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;Bluesky 首席执行官 Jay Graber 将离任&lt;/b&gt;&lt;/br&gt;原标题：Bluesky CEO Jay Graber is stepping down Bluesky 首席执行官 Jay Graber 宣布将卸任 CEO 一职，并转任公司新设立的首席创新官（Chief Innovation Officer）角色。这一调整标志着 Bluesky 进入了发展的新阶段。 职权变动与初衷 Jay Graber 在 2019 年开始着手构建用于社交媒体的开放协议，目标是开发出一系列旨在赋予用户权力的应用程序。Bluesky 最初只是该协议的一个参考客户端，但目前已发展成为拥有超过 4000 万用户的繁荣平台。 随着公司走向成熟，Jay Graber 认为 Bluesky 需要一位在规模化运营和执行方面经验丰富的管理者，而她自己则希望回归核心擅长的领域：创造新事物。她表示，人们在热情与优势重合的角色中表现得最好，转任首席创新官能让她集中精力探索去中心化社交的下一个前沿。 临时首席执行官人选 在董事会寻找永久 CEO 期间，Toni Schneider 将加入团队担任临时 CEO。Toni Schneider 的背景包括： • 曾任 Automattic（WordPress.com…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:28:26 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19440</link>
+      <guid>https://t.me/hacker_news_zh/19440</guid>
+      <media:community>
+        <media:statistics views="58"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] 新农业法案或将使生猪终身被禁锢在限位栏中原文：https://twitter.com/Lewis_Bollard/status/2030985 [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/1dzyjJjDNWGbTy4EYXMa3w-03-09"&gt;&lt;b&gt;新农业法案或将使生猪终身被禁锢在限位栏中&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://twitter.com/Lewis_Bollard/status/2030985704902099335"&gt;https://twitter.com/Lewis_Bollard/status/2030985704902099335&lt;/a&gt;&lt;br&gt;阅读时间：4 分钟&lt;br&gt;分数：179&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/1dzyjJjDNWGbTy4EYXMa3w-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;新农业法案或将使生猪终身被禁锢在限位栏中&lt;/b&gt;&lt;/br&gt;原标题：New farm bill would condemn pigs to a lifetime in gestation crates Lewis Bollard 在社交媒体上发布消息指出，美国众议院农业委员会近期通过的一项长达 800 页的农业法案（Farm Bill）中，在第 744 页隐藏了一项争议性条款。该条款被重新命名为 Save Our Bacon Act，其内容可能会导致数百万头猪终生被关在限位栏中。 条款背景与目的 这项被称为 Save Our Bacon Act 的条款是生猪行业的一项策略。其核心目的是废除美国各州禁止销售通过限位栏饲养的猪肉的法律。此前，保守派占据多数的美国最高法院已于 2023 年裁定支持各州的这些禁令。 博主指出，超过 85% 的民主党人和共和党人都反对使用这种限位栏。在多个州，选民们也已经通过投票表决的方式支持禁止使用这些设施。生猪行业意识到无法通过正常的公开投票获胜，因此选择将该条文埋入长达 800 页的复杂法案中，希望逃避公众监督。 呼吁公众采取行动 推文呼吁民众立即联系各自的参议员和众议员。主要诉求是：除非农业法案中删除了 Save Our Bacon Act…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:29:42 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19439</link>
+      <guid>https://t.me/hacker_news_zh/19439</guid>
+      <media:community>
+        <media:statistics views="49"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] 佛罗里达州法官裁定闯红灯监控罚单违宪原文：https://cbs12.com/news/local/florida-news-judge-rule [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/tBng4MDd8Ypao-HrpKcCKw-03-09"&gt;&lt;b&gt;佛罗里达州法官裁定闯红灯监控罚单违宪&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://cbs12.com/news/local/florida-news-judge-rules-red-light-camera-tickets-unconstitutional"&gt;https://cbs12.com/news/local/florida-news-judge-rules-red-light-camera-tickets-unconstitutional&lt;/a&gt;&lt;br&gt;阅读时间：4 分钟&lt;br&gt;分数：321&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/tBng4MDd8Ypao-HrpKcCKw-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;佛罗里达州法官裁定闯红灯监控罚单违宪&lt;/b&gt;&lt;/br&gt;原标题：Florida judge rules red light camera tickets are unconstitutional 佛罗里达州法官裁定闯红灯监控罚单违宪 布劳沃德县（Broward County）的一名法官近日撤销了一张闯红灯监控罚单，并裁定用于签发此类罚单的州法律违宪。法官认为该法律不当地将举证责任转移给了车辆所有人。 裁决核心内容 法官 Steven P. DeLuca 在其签署的这份长达 21 页的命令中，批准了被告撤销罚单的动议。该案件源于佛罗里达州桑赖斯市（Sunrise）的一个自动监控摄像头拍摄到的一起违规行为。 此裁决的关键理由包括： • 举证责任倒置：被告认为，现行法律要求车辆所有者证明自己当时没有驾驶车辆，而不是由政府证明谁在驾驶，这在宪法上是不合理的。 • 准刑事性质：法官一致认为，虽然处理闯红灯监控案件被归类为民事违章，但其功能具有准刑事性质。因为这类处罚会导致经济罚款（通常为 158 美元）、正式的定罪裁决，并会对驾驶员的记录产生后果。 • 正当程序保护：根据佛罗里达州法规 316.0083，一旦摄像头拍到违规，就推定注册车主负有责任，…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:28:40 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19438</link>
+      <guid>https://t.me/hacker_news_zh/19438</guid>
+      <media:community>
+        <media:statistics views="51"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] 合法是否等同于正当：AI 重新实现与保护性授权的侵蚀原文：https://writings.hongminhee.org/2026/03 [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/sdixEYIxxv1jDOlrrbIb-w-03-09"&gt;&lt;b&gt;合法是否等同于正当：AI 重新实现与保护性授权的侵蚀&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://writings.hongminhee.org/2026/03/legal-vs-legitimate/"&gt;https://writings.hongminhee.org/2026/03/legal-vs-legitimate/&lt;/a&gt;&lt;br&gt;阅读时间：8 分钟&lt;br&gt;分数：337&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/sdixEYIxxv1jDOlrrbIb-w-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;合法是否等同于正当：AI 重新实现与保护性授权的侵蚀&lt;/b&gt;&lt;/br&gt;原标题：Is legal the same as legitimate: AI reimplementation and the erosion of copyleft 这篇文章讨论了 AI 重新实现（Reimplementation）技术对开源软件中保护性授权（Copyleft，如 GPL 或 LGPL 协议）的侵蚀问题。 事件背景：chardet 库的授权变更 Python 环境中广泛使用的字符编码检测库 chardet 的维护者 Dan Blanchard 发布了 7.0 版本。这个新版本比旧版快 48 倍，支持多核并行，并且作者声称该版本是由 Anthropic 公司的 Claude 参与贡献，从零开始重新设计的。 最显著的变化是，该库的授权协议从原来的 LGPL 变更为 MIT。 Blanchard 表明，他在开发过程中从未直接查看现有的源代码，而是将 API 接口和测试套件提供给 Claude，要求它重新实现。根据 JPlag 的测量，生成的代码与之前的版本相似度不足 1.3%。Blanchard 据此认为这是一项独立的全新作品，因此他没有义务继续沿用 LGPL 协议。 争议与法律层面的解读 该库的原作者…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:28:06 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19437</link>
+      <guid>https://t.me/hacker_news_zh/19437</guid>
+      <media:community>
+        <media:statistics views="54" forwards="1"/>
+      </media:community>
+    </item>
+    <item>
+      <title>[Media] 用波函数折叠算法构建程序化六角网格地图原文：https://felixturner.github.io/hex-map-wfc/article/ [...]</title>
+      <description>&lt;br/&gt;&lt;a href="https://telegra.ph/GLxZcXlPjWtIsi8ktBWYSg-03-09"&gt;&lt;b&gt;用波函数折叠算法构建程序化六角网格地图&lt;/b&gt;&lt;/a&gt;&lt;br&gt;原文：&lt;a href="https://felixturner.github.io/hex-map-wfc/article/"&gt;https://felixturner.github.io/hex-map-wfc/article/&lt;/a&gt;&lt;br&gt;阅读时间：8 分钟&lt;br&gt;分数：380&lt;br/&gt;&lt;br/&gt;&lt;blockquote cite="https://telegra.ph/GLxZcXlPjWtIsi8ktBWYSg-03-09"&gt;&lt;cite&gt;&lt;b&gt;Telegraph&lt;/b&gt;&lt;/cite&gt;&lt;/br&gt;&lt;b&gt;用波函数折叠算法构建程序化六角网格地图&lt;/b&gt;&lt;/br&gt;原标题：Building a Procedural Hex Map with Wave Function Collapse 该项目展示了如何使用波函数折叠算法（Wave Function Collapse，简称 WFC）生成程序化中世纪岛屿地图。这套系统由 4100 个六角柱（Hex）瓦片组成，利用 WebGPU 和大量回溯逻辑构建而成。 程序化地图的魅力 作者从小就着迷于随机生成的地图，这种机制让玩家不是在设计地下城，而是在探索未知。现在的这个生成器可以完全自动地创建包含道路、河流、海岸线、悬崖、森林和村庄的中世纪小岛。整个系统基于 Three.js WebGPU 和 TSL 着色器构建，由 19 个子网格组成，生成耗时约 20 秒。 WFC 算法与拼图规则 如果玩过《卡卡颂》桌游，就能理解 WFC 的原理。每个瓦片都有边缘属性（草地、道路、城市），相邻瓦片必须边缘匹配。六角瓦片有 6 条边，比方形瓦片多了 50% 的约束条件，组合爆炸的风险更高。 项目中定义了 30 种不同的基础瓦片，涵盖草地、水域、道路等。考虑到旋转和 5 个高度级别，每个格子有 900 种可能的状态。 WFC 的工作流程 1.…&lt;/br&gt;&lt;/blockquote&gt;</description>
+      <pubDate>Tue, 10 Mar 2026 04:27:54 +0300</pubDate>
+      <link>https://t.me/hacker_news_zh/19436</link>
+      <guid>https://t.me/hacker_news_zh/19436</guid>
+      <media:community>
+        <media:statistics views="60"/>
+      </media:community>
+    </item>
+  </channel>
+</rss>
